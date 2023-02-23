@@ -4,7 +4,7 @@ export function Input({ ...rest }: IInputProps) {
   return (
     <NativeBaseInput
       h={45}
-      rounded={6}
+      rounded={0}
       bgColor="gray.100"
       borderWidth={0}
       fontSize="md"

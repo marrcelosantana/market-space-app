@@ -1,23 +1,31 @@
-import { VStack, Image, Text, ScrollView, Heading, Center } from "native-base";
+import {
+  VStack,
+  Image,
+  Text,
+  ScrollView,
+  Heading,
+  Center,
+  HStack,
+} from "native-base";
+
+import { useNavigation } from "@react-navigation/native";
+import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 import logoImg from "@assets/logo.png";
+
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
+import { ShowPassWordButton } from "@components/ShowPasswordButton";
 
 export function SignIn() {
+  const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
   return (
     <ScrollView
       contentContainerStyle={{ flexGrow: 1 }}
       showsVerticalScrollIndicator={false}
     >
-      <VStack
-        width="100%"
-        height="75%"
-        px={10}
-        py={32}
-        bgColor="gray.200"
-        rounded={24}
-      >
+      <VStack width="100%" height="75%" px={10} py={32} rounded={24}>
         <Center>
           <Image source={logoImg} alt="logo" />
           <Heading color="gray.700" fontSize={32} fontFamily="heading">
@@ -36,7 +44,11 @@ export function SignIn() {
             keyboardType="email-address"
             autoCapitalize="none"
           />
-          <Input placeholder="Senha" secureTextEntry />
+
+          <HStack width="full">
+            <Input placeholder="Senha" secureTextEntry flex={1} />
+            <ShowPassWordButton />
+          </HStack>
 
           <Button
             title="Acessar"
@@ -49,8 +61,15 @@ export function SignIn() {
 
       <VStack flex={1} px={10}>
         <Center pt={12}>
-          <Text mb={4}>Ainda não tem acesso?</Text>
-          <Button title="Criar uma conta" />
+          <Text mb={4} color="gray.600">
+            Ainda não tem acesso?
+          </Text>
+          <Button
+            title="Criar uma conta"
+            onPress={() => {
+              navigation.navigate("signUp");
+            }}
+          />
         </Center>
       </VStack>
     </ScrollView>
