@@ -7,7 +7,8 @@ import {
   Karla_700Bold,
 } from "@expo-google-fonts/karla";
 
-import { Login } from "@screens/Login";
+import { THEME } from "@theme/index";
+import { SignIn } from "@screens/SignIn";
 import { Loading } from "@components/Loading";
 
 export default function App() {
@@ -17,13 +18,13 @@ export default function App() {
   });
 
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={THEME}>
       <StatusBar
         barStyle="dark-content"
         backgroundColor="transparent"
         translucent
       />
-      {fontsLoaded ? <Login /> : <Loading />}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </NativeBaseProvider>
   );
 }
