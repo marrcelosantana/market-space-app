@@ -17,7 +17,7 @@ import avatarImg from "@assets/avatar.png";
 import { PencilSimpleLine } from "phosphor-react-native";
 
 import { Input } from "@components/Input";
-import { Button } from "@components/Button";
+import { ButtonLG } from "@components/ButtonLG";
 import { ShowPassWordButton } from "@components/ShowPasswordButton";
 
 export function SignUp() {
@@ -85,14 +85,14 @@ export function SignUp() {
             <ShowPassWordButton />
           </HStack>
 
-          <Button title="Criar" bgColor="gray.700" textColor="white" mt={4} />
+          <ButtonLG title="Criar" bgColor="gray.700" textColor="white" mt={4} />
         </Center>
 
         <Center mt={10}>
           <Text mb={4} color="gray.600">
             Já tem uma conta?
           </Text>
-          <Button
+          <ButtonLG
             title="Ir para o login"
             onPress={() => navigation.navigate("signIn")}
           />

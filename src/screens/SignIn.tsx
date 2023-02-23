@@ -14,7 +14,7 @@ import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 import logoImg from "@assets/logo.png";
 
 import { Input } from "@components/Input";
-import { Button } from "@components/Button";
+import { ButtonLG } from "@components/ButtonLG";
 import { ShowPassWordButton } from "@components/ShowPasswordButton";
 
 export function SignIn() {
@@ -50,7 +50,7 @@ export function SignIn() {
             <ShowPassWordButton />
           </HStack>
 
-          <Button
+          <ButtonLG
             title="Acessar"
             bgColor="blue.500"
             textColor="gray.100"
@@ -64,7 +64,7 @@ export function SignIn() {
           <Text mb={4} color="gray.600">
             Ainda não tem acesso?
           </Text>
-          <Button
+          <ButtonLG
             title="Criar uma conta"
             onPress={() => {
               navigation.navigate("signUp");
