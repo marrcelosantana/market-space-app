@@ -9,13 +9,12 @@ import {
   Pressable,
 } from "native-base";
 
-import { AntDesign } from "@expo/vector-icons";
-
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 import logoImg from "@assets/logo.png";
 import avatarImg from "@assets/avatar.png";
+import { PencilSimpleLine } from "phosphor-react-native";
 
 import { Input } from "@components/Input";
 import { Button } from "@components/Button";
@@ -62,7 +61,7 @@ export function SignUp() {
               ml={-8}
               mt={12}
             >
-              <AntDesign name="edit" size={20} color="white" />
+              <PencilSimpleLine size={22} color="#fff" />
             </Pressable>
           </HStack>
         </Center>

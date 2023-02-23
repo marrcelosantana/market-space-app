@@ -1,5 +1,5 @@
 import { Button as ButtonNativeBase, IButtonProps } from "native-base";
-import { AntDesign } from "@expo/vector-icons";
+import { Eye } from "phosphor-react-native";
 
 export function ShowPassWordButton({ ...rest }: IButtonProps) {
   return (
@@ -12,7 +12,7 @@ export function ShowPassWordButton({ ...rest }: IButtonProps) {
       rounded={0}
       {...rest}
     >
-      <AntDesign name="eyeo" size={24} color="#9F9BA1" />
+      <Eye size={24} color="#9F9BA1" />
     </ButtonNativeBase>
   );
 }
