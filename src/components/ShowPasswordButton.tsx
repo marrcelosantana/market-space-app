@@ -1,4 +1,4 @@
-import { Button as ButtonNativeBase, IButtonProps, Text } from "native-base";
+import { Button as ButtonNativeBase, IButtonProps } from "native-base";
 import { AntDesign } from "@expo/vector-icons";
 
 export function ShowPassWordButton({ ...rest }: IButtonProps) {

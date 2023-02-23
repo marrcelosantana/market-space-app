@@ -6,7 +6,10 @@ import {
   Heading,
   Center,
   HStack,
+  Pressable,
 } from "native-base";
+
+import { AntDesign } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
@@ -39,9 +42,29 @@ export function SignUp() {
         </Center>
 
         <Center>
-          <Center w={24} h={24} mt={4} rounded="full" flex={1}>
+          <HStack
+            w={24}
+            h={24}
+            mt={4}
+            rounded="full"
+            flex={1}
+            alignItems="center"
+            justifyContent="center"
+          >
             <Image source={avatarImg} alt="avatar" />
-          </Center>
+            <Pressable
+              w={10}
+              h={10}
+              rounded="full"
+              alignItems="center"
+              justifyContent="center"
+              bgColor="blue.500"
+              ml={-8}
+              mt={12}
+            >
+              <AntDesign name="edit" size={20} color="white" />
+            </Pressable>
+          </HStack>
         </Center>
 
         <Center mt={8}>
