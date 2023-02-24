@@ -28,6 +28,7 @@ const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
 
 export function AppRoutes() {
   const { colors, sizes } = useTheme();
+
   return (
     <Navigator
       screenOptions={{
@@ -63,19 +64,19 @@ export function AppRoutes() {
       <Screen
         name="details"
         component={AdDetails}
-        options={{ tabBarButton: () => null }}
+        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
       />
 
       <Screen
         name="create"
         component={CreateAd}
-        options={{ tabBarButton: () => null }}
+        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
       />
 
       <Screen
         name="update"
         component={UpdateAd}
-        options={{ tabBarButton: () => null }}
+        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
       />
     </Navigator>
   );

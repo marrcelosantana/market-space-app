@@ -9,10 +9,11 @@ import {
   VStack,
   IPressableProps,
 } from "native-base";
+
 import { AdStatusTag } from "@components/AdStatusTag";
 
 import productImg from "@assets/shoes.png";
-import avatarImg from "@assets/man.png";
+import { Avatar } from "./Avatar";
 
 type Props = IPressableProps & {
   title: string;
@@ -42,15 +43,7 @@ export function AdCard({ title, price, status, ...rest }: Props) {
             justifyContent="space-between"
             px={1}
           >
-            <Center w={6} borderWidth={2} borderColor="white" rounded="full">
-              <Image
-                source={avatarImg}
-                alt="imagem do usuário"
-                size={6}
-                rounded="full"
-                resizeMode="cover"
-              />
-            </Center>
+            <Avatar borderColor="white" />
 
             <Box mt={-2}>
               <AdStatusTag title={status} />
