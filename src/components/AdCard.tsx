@@ -22,8 +22,8 @@ type Props = IPressableProps & {
 
 export function AdCard({ title, price, status, ...rest }: Props) {
   return (
-    <Pressable {...rest}>
-      <VStack w={40} bgColor="gray.200" paddingBottom={2} rounded={6} m="5.5px">
+    <Pressable {...rest} w="50%">
+      <VStack bgColor="gray.200" paddingBottom={2} rounded={6} m={2}>
         <Box>
           <Image
             source={productImg}
