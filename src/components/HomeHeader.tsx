@@ -1,10 +1,12 @@
 import { Center, Heading, HStack, Image, Text, VStack } from "native-base";
-
-import avatarImg from "@assets/man.png";
 import { ButtonMD } from "@components/ButtonMD";
-import { Plus } from "phosphor-react-native";
+import avatarImg from "@assets/man.png";
+import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 export function HomeHeader() {
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
+
   return (
     <HStack w="full" alignItems="center" justifyContent="space-between">
       <HStack>
@@ -38,6 +40,9 @@ export function HomeHeader() {
         textColor="white"
         iconName="plus"
         iconColor="white"
+        onPress={() => {
+          navigation.navigate("create");
+        }}
       />
     </HStack>
   );

@@ -1,4 +1,6 @@
+import { Highlight } from "@components/Highlight";
 import { HomeHeader } from "@components/HomeHeader";
+import { Input } from "@components/Input";
 import { Box, Text, VStack } from "native-base";
 
 export function Home() {
@@ -8,9 +10,17 @@ export function Home() {
         <HomeHeader />
       </Box>
 
-      <Text mt={10} mb={2} color="gray.500">
+      <Text mt={10} mb={3} color="gray.500">
         Seus produtos anunciados para venda
       </Text>
+
+      <Highlight />
+
+      <Text mt={10} mb={3} color="gray.500">
+        Compre produtos variados
+      </Text>
+
+      <Input placeholder="Buscar cenário" />
     </VStack>
   );
 }
