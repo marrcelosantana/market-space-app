@@ -1,8 +1,9 @@
 import { Center, Heading, HStack, Image, Text, VStack } from "native-base";
-import { ButtonMD } from "@components/ButtonMD";
-import avatarImg from "@assets/man.png";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { ButtonMD } from "@components/ButtonMD";
+
+import avatarImg from "@assets/man.png";
 
 export function HomeHeader() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
