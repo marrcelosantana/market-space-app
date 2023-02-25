@@ -51,7 +51,7 @@ export function AdDetails() {
             <Text ml={2}>Makenna Baptista</Text>
           </HStack>
 
-          <VStack px={8}>
+          <VStack px={8} pb={8}>
             <AdStatusTag title="novo" />
 
             <HStack mt={2} alignItems="center" justifyContent="space-between">

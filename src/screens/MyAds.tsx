@@ -120,6 +120,7 @@ export function MyAds() {
             type={item.type}
             isMine={true}
             isActive={item.isActive}
+            onPress={() => navigation.navigate("my_ad_details")}
           />
         )}
         numColumns={2}

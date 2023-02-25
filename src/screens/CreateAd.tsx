@@ -3,7 +3,6 @@ import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import {
-  Center,
   Checkbox,
   Heading,
   HStack,
@@ -36,7 +35,7 @@ export function CreateAd() {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <VStack flex={1} px={8}>
+        <VStack flex={1} px={8} pb={8}>
           <VStack mt={8}>
             <Heading fontSize="md" fontFamily="heading" color="gray.600">
               Imagens

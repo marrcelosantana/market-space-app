@@ -25,20 +25,19 @@ export function AdPreview() {
         </Text>
         <Text color="gray.200">É assim que seu produto vai aparecer!</Text>
       </VStack>
-
-      <Image
-        source={productImg}
-        alt="produto"
-        w="full"
-        h="280px"
-        resizeMode="cover"
-      />
-
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <VStack px={8} mt={4}>
+        <Image
+          source={productImg}
+          alt="produto"
+          w="full"
+          h="280px"
+          resizeMode="cover"
+        />
+
+        <VStack px={8} mt={4} pb={8}>
           <HStack alignItems="center">
             <Avatar borderColor="blue.500" />
             <Text ml={2} color="gray.600" fontSize="sm">
