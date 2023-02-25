@@ -17,6 +17,7 @@ import { Input } from "@components/Input";
 import { MagnifyingGlass, Sliders } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { FilterModal } from "@components/FilterModal";
 
 export function Home() {
   const [products, setProducts] = useState([
@@ -27,6 +28,8 @@ export function Home() {
     { id: 5, title: "Tênis verde", price: "R$ 79,90", type: "novo" },
     { id: 6, title: "Tênis preto", price: "R$ 79,90", type: "usado" },
   ]);
+
+  const [modalVisible, setModalVisible] = useState(false);
 
   const { colors } = useTheme();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -69,6 +72,7 @@ export function Home() {
           bgColor="gray.100"
           h={45}
           px={2}
+          onPress={() => setModalVisible(true)}
         >
           <Sliders size={20} color={colors.gray[600]} />
         </Pressable>
@@ -87,6 +91,11 @@ export function Home() {
         )}
         numColumns={2}
         showsVerticalScrollIndicator={false}
+      />
+
+      <FilterModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
       />
     </VStack>
   );
