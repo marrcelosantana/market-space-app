@@ -27,16 +27,15 @@ export function CreateAd() {
 
   return (
     <VStack flex={1}>
+      <FormAdHeader
+        title="Criar anúncio"
+        handleGoBack={() => navigation.goBack()}
+      />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
         <VStack flex={1} px={8}>
-          <FormAdHeader
-            title="Criar anúncio"
-            handleGoBack={() => navigation.goBack()}
-          />
-
           <VStack mt={8}>
             <Heading fontSize="md" fontFamily="heading" color="gray.600">
               Imagens
@@ -145,7 +144,7 @@ export function CreateAd() {
       <HStack
         bgColor="white"
         px={8}
-        pt={4}
+        pt={6}
         pb={8}
         alignItems="center"
         justifyContent="space-between"
