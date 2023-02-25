@@ -55,7 +55,7 @@ export function Home() {
       </Text>
 
       <HStack>
-        <Input placeholder="Buscar cenário" flex={1} />
+        <Input placeholder="Buscar anúncio" flex={1} />
         <Pressable
           alignItems="center"
           justifyContent="center"
