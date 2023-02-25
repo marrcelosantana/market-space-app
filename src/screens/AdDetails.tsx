@@ -25,18 +25,18 @@ export function AdDetails() {
 
   return (
     <VStack flex={1}>
+      <HStack mt={10} px={8} py={4}>
+        <Pressable
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <ArrowLeft size={24} color={colors.gray[700]} />
+        </Pressable>
+      </HStack>
+
       <ScrollView showsVerticalScrollIndicator={false}>
         <VStack flex={1}>
-          <HStack mt={10} px={8} py={4}>
-            <Pressable
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <ArrowLeft size={24} color={colors.gray[700]} />
-            </Pressable>
-          </HStack>
-
           <Image
             source={productImg}
             alt="imagem do produto"
