@@ -12,13 +12,13 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
-import logoImg from "@assets/logo.png";
-import avatarImg from "@assets/avatar.png";
-import { PencilSimpleLine } from "phosphor-react-native";
-
 import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
 import { ShowPassWordButton } from "@components/ShowPasswordButton";
+
+import logoImg from "@assets/logo.png";
+import avatarImg from "@assets/avatar.png";
+import { PencilSimpleLine } from "phosphor-react-native";
 
 export function SignUp() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
