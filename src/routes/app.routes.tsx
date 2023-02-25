@@ -1,3 +1,4 @@
+import { useTheme } from "native-base";
 import { Platform } from "react-native";
 import {
   createBottomTabNavigator,
@@ -6,11 +7,10 @@ import {
 
 import { AdDetails } from "@screens/AdDetails";
 import { CreateAd } from "@screens/CreateAd";
-
 import { Home } from "@screens/Home";
 import { MyAds } from "@screens/MyAds";
 import { UpdateAd } from "@screens/UpdateAd";
-import { useTheme } from "native-base";
+import { AdPreview } from "@screens/AdPreview";
 
 import { House, Tag } from "phosphor-react-native";
 
@@ -20,6 +20,7 @@ type AppRoutes = {
   create: undefined;
   details: undefined;
   update: undefined;
+  preview: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -76,6 +77,12 @@ export function AppRoutes() {
       <Screen
         name="update"
         component={UpdateAd}
+        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
+      />
+
+      <Screen
+        name="preview"
+        component={AdPreview}
         options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
       />
     </Navigator>

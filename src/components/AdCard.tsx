@@ -1,6 +1,5 @@
 import {
   Box,
-  Center,
   Heading,
   HStack,
   Image,
@@ -11,20 +10,29 @@ import {
 } from "native-base";
 
 import { AdStatusTag } from "@components/AdStatusTag";
+import { Avatar } from "@components/Avatar";
 
 import productImg from "@assets/shoes.png";
-import { Avatar } from "./Avatar";
 
 type Props = IPressableProps & {
   title: string;
   price: string;
-  status: string;
+  type: string;
+  isActive?: boolean;
+  isMine?: boolean;
 };
 
-export function AdCard({ title, price, status, ...rest }: Props) {
+export function AdCard({
+  title,
+  price,
+  type,
+  isActive = true,
+  isMine = false,
+  ...rest
+}: Props) {
   return (
     <Pressable {...rest} w="50%">
-      <VStack bgColor="gray.200" paddingBottom={2} rounded={6} m={2}>
+      <VStack bgColor={"gray.200"} paddingBottom={2} rounded={6} m={2}>
         <Box>
           <Image
             source={productImg}
@@ -33,6 +41,7 @@ export function AdCard({ title, price, status, ...rest }: Props) {
             rounded={6}
             position="relative"
             resizeMode="cover"
+            style={isActive === false && { opacity: 0.4 }}
           />
 
           <HStack
@@ -43,12 +52,28 @@ export function AdCard({ title, price, status, ...rest }: Props) {
             justifyContent="space-between"
             px={1}
           >
-            <Avatar borderColor="white" />
+            {isMine === false && <Avatar borderColor="white" />}
 
-            <Box mt={-2}>
-              <AdStatusTag title={status} />
+            <Box
+              mt={isMine === false && -2}
+              style={isActive === false && { opacity: 0.4 }}
+            >
+              <AdStatusTag title={type} />
             </Box>
           </HStack>
+
+          {isActive === false && (
+            <Text
+              position="absolute"
+              mt={20}
+              color="gray.600"
+              fontSize={12}
+              fontFamily="heading"
+              style={{ marginLeft: 12 }}
+            >
+              ANÚNCIO DESATIVADO
+            </Text>
+          )}
         </Box>
 
         <VStack mt={2}>

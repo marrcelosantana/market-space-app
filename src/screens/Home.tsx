@@ -20,12 +20,12 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 export function Home() {
   const [products, setProducts] = useState([
-    { id: 1, title: "Tênis vermelho", price: "R$ 59,90", status: "usado" },
-    { id: 2, title: "Tênis azul", price: "R$ 29,90", status: "novo" },
-    { id: 3, title: "Tênis branco", price: "R$ 49,90", status: "novo" },
-    { id: 4, title: "Tênis amarelo", price: "R$ 79,90", status: "usado" },
-    { id: 5, title: "Tênis verde", price: "R$ 79,90", status: "novo" },
-    { id: 6, title: "Tênis preto", price: "R$ 79,90", status: "usado" },
+    { id: 1, title: "Tênis vermelho", price: "R$ 59,90", type: "usado" },
+    { id: 2, title: "Tênis azul", price: "R$ 29,90", type: "novo" },
+    { id: 3, title: "Tênis branco", price: "R$ 49,90", type: "novo" },
+    { id: 4, title: "Tênis amarelo", price: "R$ 79,90", type: "usado" },
+    { id: 5, title: "Tênis verde", price: "R$ 79,90", type: "novo" },
+    { id: 6, title: "Tênis preto", price: "R$ 79,90", type: "usado" },
   ]);
 
   const { colors } = useTheme();
@@ -81,7 +81,7 @@ export function Home() {
           <AdCard
             title={item.title}
             price={item.price}
-            status={item.status}
+            type={item.type}
             onPress={handleOpenCard}
           />
         )}
