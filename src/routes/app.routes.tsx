@@ -13,6 +13,7 @@ import { UpdateAd } from "@screens/UpdateAd";
 import { AdPreview } from "@screens/AdPreview";
 
 import { House, Tag } from "phosphor-react-native";
+import { MyAdDetails } from "@screens/MyAdDetails";
 
 type AppRoutes = {
   home: undefined;
@@ -21,6 +22,7 @@ type AppRoutes = {
   details: undefined;
   update: undefined;
   preview: undefined;
+  my_ad_details: undefined;
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
@@ -83,6 +85,12 @@ export function AppRoutes() {
       <Screen
         name="preview"
         component={AdPreview}
+        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
+      />
+
+      <Screen
+        name="my_ad_details"
+        component={MyAdDetails}
         options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
       />
     </Navigator>

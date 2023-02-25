@@ -3,6 +3,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import {
+  Center,
   Checkbox,
   Heading,
   HStack,
@@ -90,12 +91,25 @@ export function CreateAd() {
               Venda
             </Heading>
 
-            <Input
-              placeholder="Valor do produto"
-              keyboardType="numeric"
-              w="full"
-              position="relative"
-            />
+            <HStack>
+              <Input
+                placeholder="Valor do produto"
+                keyboardType="numeric"
+                w="full"
+                position="relative"
+                pl={10}
+                rounded={6}
+              />
+              <Text
+                fontFamily="heading"
+                color="gray.700"
+                position="absolute"
+                mt={3}
+                ml={3}
+              >
+                R$
+              </Text>
+            </HStack>
 
             <Heading fontSize="md" fontFamily="heading" color="gray.600" mb={4}>
               Aceita troca?
@@ -120,19 +134,19 @@ export function CreateAd() {
 
             <VStack>
               <Checkbox.Group onChange={setGroupValues} value={groupValues}>
-                <Checkbox value="ticket" my={2} colorScheme="gray">
+                <Checkbox value="ticket" my={1} colorScheme="gray">
                   <Text>Boleto</Text>
                 </Checkbox>
-                <Checkbox value="pix" my={2} colorScheme="gray">
+                <Checkbox value="pix" my={1} colorScheme="gray">
                   <Text>Pix</Text>
                 </Checkbox>
-                <Checkbox value="money" my={2} colorScheme="gray">
+                <Checkbox value="money" my={1} colorScheme="gray">
                   <Text>Dinheiro</Text>
                 </Checkbox>
-                <Checkbox value="credit-card" my={2} colorScheme="gray">
+                <Checkbox value="credit-card" my={1} colorScheme="gray">
                   <Text>Cartão de Crédito</Text>
                 </Checkbox>
-                <Checkbox value="deposit" my={2}>
+                <Checkbox value="deposit" my={1}>
                   <Text>Depósito Bancário</Text>
                 </Checkbox>
               </Checkbox.Group>
