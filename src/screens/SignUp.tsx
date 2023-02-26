@@ -29,7 +29,6 @@ import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
 
 type UserPhotoProps = {
-  selected: boolean;
   photo: {
     uri: string;
     name: string;
@@ -51,7 +50,7 @@ const signUpSchema = yup.object({
     .string()
     .required("Informe o telefone")
     .min(9, "O telefone deve possuir no mínimo 9 dígitos.")
-    .max(11, "O telefone deve possuir no máximo 11 dígitos."),
+    .max(14, "O telefone deve possuir no máximo 14 dígitos."),
   email: yup.string().required("Informe o email.").email("Email inválido."),
   password: yup
     .string()
@@ -64,9 +63,8 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
-  const [userPhoto, setUserPhoto] = useState({
-    selected: false,
-  } as UserPhotoProps);
+  const [userPhoto, setUserPhoto] = useState({} as UserPhotoProps);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
@@ -98,46 +96,62 @@ export function SignUp() {
 
       if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
         return toast.show({
-          title: "Essa imagem é muito grande! Escolha uma de até 5MB.",
+          title: "Essa imagem é muito grande. Escolha uma de até 5MB.",
           placement: "top",
           bgColor: "red.500",
         });
       }
+
+      const fileExtension = photoSelected.assets[0].uri.split(".").pop();
+
+      const photoFile = {
+        name: `${fileExtension}`.toLowerCase(),
+        uri: photoSelected.assets[0].uri,
+        type: `${photoSelected.assets[0].type}/${fileExtension}`,
+      } as any;
+
+      setUserPhoto({
+        photo: { ...photoFile },
+      });
+
+      toast.show({
+        title: "Foto selecionada!",
+        placement: "top",
+        bgColor: "green.500",
+      });
     }
-
-    const fileExtension = photoSelected.assets[0].uri.split(".").pop();
-
-    const photoFile = {
-      name: `${fileExtension}`.toLowerCase(),
-      uri: photoSelected.assets[0].uri,
-      type: `${photoSelected.assets[0].type}/${fileExtension}`,
-    } as any;
-
-    setUserPhoto({
-      selected: true,
-      photo: { ...photoFile },
-    });
   }
 
   async function handleSignUp({ name, email, tel, password }: FormData) {
     try {
       const userForm = new FormData();
-      const avatar = {
+
+      const userImage: any = {
         ...userPhoto.photo,
         name: `${name}.${userPhoto.photo.name}`.toLowerCase(),
       };
 
-      userForm.append("avatar", avatar.uri);
+      userForm.append("avatar", userImage);
       userForm.append("name", name);
       userForm.append("email", email);
       userForm.append("tel", tel);
       userForm.append("password", password);
+
+      setIsLoading(true);
 
       await api.post("/users", userForm, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      toast.show({
+        title: "Usuário cadastrado com sucesso!",
+        placement: "top",
+        bgColor: "green.500",
+      });
+
+      navigation.navigate("signIn");
     } catch (error) {
       const isAppError = error instanceof AppError;
 
@@ -259,6 +273,7 @@ export function SignUp() {
               textColor="white"
               mt={4}
               onPress={handleSubmit(handleSignUp)}
+              isLoading={isLoading}
             />
           </Center>
 
