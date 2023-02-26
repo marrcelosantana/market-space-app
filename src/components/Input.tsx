@@ -43,7 +43,6 @@ export function Input({
             borderWidth: 1,
             borderColor: "red.500",
           }}
-          position="relative"
           {...rest}
         />
         {isPasswordInput && (
