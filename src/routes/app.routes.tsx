@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { useTheme } from "native-base";
 import { Platform } from "react-native";
+
 import {
   createBottomTabNavigator,
   BottomTabNavigationProp,
@@ -11,12 +13,11 @@ import { Home } from "@screens/Home";
 import { MyAds } from "@screens/MyAds";
 import { UpdateAd } from "@screens/UpdateAd";
 import { AdPreview } from "@screens/AdPreview";
+import { MyAdDetails } from "@screens/MyAdDetails";
 
 import { House, SignOut, Tag } from "phosphor-react-native";
-import { MyAdDetails } from "@screens/MyAdDetails";
 import { Loading } from "@components/Loading";
 import { useAuth } from "@hooks/useAuth";
-import { useEffect } from "react";
 
 type AppRoutes = {
   home: undefined;

@@ -27,6 +27,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
+import { useAuth } from "@hooks/useAuth";
 
 type UserPhotoProps = {
   photo: {
@@ -68,6 +69,8 @@ export function SignUp() {
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
+
+  const { signIn } = useAuth();
 
   const {
     control,
@@ -151,7 +154,7 @@ export function SignUp() {
         bgColor: "green.500",
       });
 
-      navigation.navigate("signIn");
+      await signIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
 
