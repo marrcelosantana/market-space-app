@@ -4,6 +4,7 @@ import { UserDTO } from "./UserDTO";
 
 export type ProductDTO = {
   id: string;
+  name: string;
   user_id: string;
   description: string;
   is_new: boolean;

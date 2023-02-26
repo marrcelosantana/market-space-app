@@ -3,6 +3,7 @@ import {
   Box,
   FlatList,
   HStack,
+  Input,
   Pressable,
   Text,
   useTheme,
@@ -12,7 +13,6 @@ import {
 import { AdCard } from "@components/AdCard";
 import { Highlight } from "@components/Highlight";
 import { HomeHeader } from "@components/HomeHeader";
-import { Input } from "@components/Input";
 
 import { MagnifyingGlass, Sliders } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -55,7 +55,20 @@ export function Home() {
       </Text>
 
       <HStack>
-        <Input placeholder="Buscar anúncio" flex={1} />
+        <Input
+          placeholder="Buscar um anúncio"
+          flex={1}
+          h={45}
+          mb={2}
+          rounded={0}
+          bgColor="gray.100"
+          borderWidth={0}
+          color="gray.600"
+          fontFamily="body"
+          placeholderTextColor="gray.400"
+          _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
+        />
+
         <Pressable
           alignItems="center"
           justifyContent="center"

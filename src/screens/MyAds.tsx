@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
@@ -17,62 +17,19 @@ import {
 import { Plus } from "phosphor-react-native";
 import { AdCard } from "@components/AdCard";
 
+import { useUserProducts } from "@hooks/useUserProducts";
+
 export function MyAds() {
   const [adType, setAdType] = useState<string>();
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      title: "Tênis vermelho",
-      price: "R$ 59,90",
-      type: "usado",
-      isActive: true,
-    },
-    {
-      id: 2,
-      title: "Tênis azul",
-      price: "R$ 29,90",
-      type: "novo",
-      isActive: true,
-    },
-    {
-      id: 3,
-      title: "Tênis branco",
-      price: "R$ 49,90",
-      type: "novo",
-      isActive: true,
-    },
-    {
-      id: 4,
-      title: "Tênis amarelo",
-      price: "R$ 79,90",
-      type: "usado",
-      isActive: true,
-    },
-    {
-      id: 5,
-      title: "Tênis verde",
-      price: "R$ 79,90",
-      type: "novo",
-      isActive: true,
-    },
-    {
-      id: 6,
-      title: "Tênis preto",
-      price: "R$ 109,90",
-      type: "usado",
-      isActive: false,
-    },
-    {
-      id: 7,
-      title: "Tênis cinza",
-      price: "R$ 119,90",
-      type: "usado",
-      isActive: false,
-    },
-  ]);
 
   const { colors } = useTheme();
+  const { userProducts, loadUserProducts } = useUserProducts();
+
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  useEffect(() => {
+    loadUserProducts();
+  }, [userProducts]);
 
   return (
     <VStack flex={1} px={8} mt={8}>
@@ -111,17 +68,14 @@ export function MyAds() {
       </HStack>
 
       <FlatList
-        data={products}
-        keyExtractor={(item) => item.title}
+        data={userProducts}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <AdCard
-            title={item.title}
-            price={item.price}
-            type={item.type}
-            isMine={true}
-            isActive={item.isActive}
-            onPress={() => navigation.navigate("my_ad_details")}
-          />
+          // <AdCard
+          //   product={item}
+          //   onPress={() => navigation.navigate("my_ad_details")}
+          // />
+          <Text>{item.name}</Text>
         )}
         numColumns={2}
         showsVerticalScrollIndicator={false}

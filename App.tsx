@@ -10,7 +10,9 @@ import {
 import { THEME } from "@theme/index";
 import { Loading } from "@components/Loading";
 import { Routes } from "@routes/index";
+
 import { AuthContextProvider } from "@contexts/AuthContext";
+import { UserProductsContextProvider } from "@contexts/UserProductsContext";
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useFonts({
@@ -26,7 +28,9 @@ export default function App() {
         translucent
       />
       <AuthContextProvider>
-        {fontsLoaded ? <Routes /> : <Loading />}
+        <UserProductsContextProvider>
+          {fontsLoaded ? <Routes /> : <Loading />}
+        </UserProductsContextProvider>
       </AuthContextProvider>
     </NativeBaseProvider>
   );

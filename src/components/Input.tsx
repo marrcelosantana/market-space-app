@@ -28,7 +28,7 @@ export function Input({
     <FormControl isInvalid={invalid} mb={4}>
       <HStack alignItems="center" justifyContent="center">
         <NativeBaseInput
-          w="full"
+          flex={1}
           h={45}
           rounded={0}
           bgColor="gray.100"
