@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   VStack,
   Image,
@@ -6,6 +7,7 @@ import {
   Heading,
   Center,
   HStack,
+  useToast,
 } from "native-base";
 
 import { useNavigation } from "@react-navigation/native";
@@ -17,6 +19,8 @@ import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
 
 import { useForm, Controller } from "react-hook-form";
+import { useAuth } from "@hooks/useAuth";
+import { AppError } from "@utils/AppError";
 
 type FormData = {
   email: string;
@@ -24,6 +28,10 @@ type FormData = {
 };
 
 export function SignIn() {
+  const { signIn } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const toast = useToast();
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -32,8 +40,22 @@ export function SignIn() {
     formState: { errors },
   } = useForm<FormData>({});
 
-  function handleSignIn({ email, password }: FormData) {
-    console.log({ email, password });
+  async function handleSignIn({ email, password }: FormData) {
+    try {
+      setIsLoading(true);
+      await signIn(email, password);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError ? error.message : "Não foi possível logar.";
+
+      setIsLoading(false);
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   return (
@@ -96,6 +118,7 @@ export function SignIn() {
             textColor="gray.100"
             mt={4}
             onPress={handleSubmit(handleSignIn)}
+            isLoading={isLoading}
           />
         </Center>
       </VStack>
