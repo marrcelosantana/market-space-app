@@ -6,8 +6,6 @@ import {
   ScrollView,
   Heading,
   Center,
-  HStack,
-  Pressable,
   useToast,
 } from "native-base";
 
@@ -18,32 +16,38 @@ import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
-
-import { PencilSimpleLine } from "phosphor-react-native";
+import { UserPhoto } from "@components/UserPhoto";
 
 import logoImg from "@assets/logo.png";
-import avatarImg from "@assets/avatar.png";
 
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
 import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { api } from "@services/api";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { AppError } from "@utils/AppError";
-import { Alert } from "react-native";
-import { UserPhoto } from "@components/UserPhoto";
+
+type UserPhotoProps = {
+  selected: boolean;
+  photo: {
+    uri: string;
+    name: string;
+    type: string;
+  };
+};
 
 type FormData = {
   name: string;
   email: string;
-  phone: string;
+  tel: string;
   password: string;
   password_confirm: string;
 };
 
 const signUpSchema = yup.object({
   name: yup.string().required("Informe o nome."),
-  phone: yup
+  tel: yup
     .string()
     .required("Informe o telefone")
     .min(9, "O telefone deve possuir no mínimo 9 dígitos.")
@@ -60,7 +64,9 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
-  const [userPhoto, setUserPhoto] = useState<string>("");
+  const [userPhoto, setUserPhoto] = useState({
+    selected: false,
+  } as UserPhotoProps);
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
@@ -86,20 +92,55 @@ export function SignUp() {
     }
 
     if (photoSelected.assets[0].uri) {
-      setUserPhoto(photoSelected.assets[0].uri);
+      const photoInfo = await FileSystem.getInfoAsync(
+        photoSelected.assets[0].uri
+      );
+
+      if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+        return toast.show({
+          title: "Essa imagem é muito grande! Escolha uma de até 5MB.",
+          placement: "top",
+          bgColor: "red.500",
+        });
+      }
     }
+
+    const fileExtension = photoSelected.assets[0].uri.split(".").pop();
+
+    const photoFile = {
+      name: `${fileExtension}`.toLowerCase(),
+      uri: photoSelected.assets[0].uri,
+      type: `${photoSelected.assets[0].type}/${fileExtension}`,
+    } as any;
+
+    setUserPhoto({
+      selected: true,
+      photo: { ...photoFile },
+    });
   }
 
-  async function handleSignUp({ name, email, phone, password }: FormData) {
+  async function handleSignUp({ name, email, tel, password }: FormData) {
     try {
-      const data = { name, email, phone, password, avatar: userPhoto };
+      const userForm = new FormData();
+      const avatar = {
+        ...userPhoto.photo,
+        name: `${name}.${userPhoto.photo.name}`.toLowerCase(),
+      };
 
-      const response = await api.post("/users", data);
-      console.log(response.data);
+      userForm.append("avatar", avatar.uri);
+      userForm.append("name", name);
+      userForm.append("email", email);
+      userForm.append("tel", tel);
+      userForm.append("password", password);
 
-      Alert.alert("Usuário adicionado com sucesso!");
+      await api.post("/users", userForm, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     } catch (error) {
       const isAppError = error instanceof AppError;
+
       const title = isAppError
         ? error.message
         : "Não foi possivel criar a conta.";
@@ -131,7 +172,7 @@ export function SignUp() {
           </Center>
 
           <UserPhoto
-            userPhoto={userPhoto}
+            userPhoto={userPhoto.photo?.uri}
             choosePhoto={handleUserPhotoSelect}
           />
 
@@ -166,14 +207,14 @@ export function SignUp() {
 
             <Controller
               control={control}
-              name="phone"
+              name="tel"
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Telefone"
                   keyboardType="numeric"
                   onChangeText={onChange}
                   value={value}
-                  errorMessage={errors.phone?.message}
+                  errorMessage={errors.tel?.message}
                 />
               )}
             />
