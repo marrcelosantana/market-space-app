@@ -10,12 +10,16 @@ import { ShowPassWordButton } from "./ShowPasswordButton";
 type Props = IInputProps & {
   errorMessage?: string | null;
   isPasswordInput?: boolean;
+  showPassword?: boolean;
+  setShowpassword?: (bool: boolean) => void;
 };
 
 export function Input({
   errorMessage,
   isInvalid,
   isPasswordInput = false,
+  showPassword,
+  setShowpassword,
   ...rest
 }: Props) {
   const invalid = !!errorMessage || isInvalid;
@@ -42,7 +46,9 @@ export function Input({
           position="relative"
           {...rest}
         />
-        {isPasswordInput && <ShowPassWordButton />}
+        {isPasswordInput && (
+          <ShowPassWordButton onPress={() => setShowpassword(!showPassword)} />
+        )}
       </HStack>
 
       <FormControl.ErrorMessage _text={{ color: "red.500" }}>

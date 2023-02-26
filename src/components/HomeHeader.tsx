@@ -2,10 +2,12 @@ import { Center, Heading, HStack, Image, Text, VStack } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ButtonMD } from "@components/ButtonMD";
-
-import avatarImg from "@assets/man.png";
+import avatarImg from "@assets/avatar.png";
+import { useAuth } from "@hooks/useAuth";
+import { api } from "@services/api";
 
 export function HomeHeader() {
+  const { user } = useAuth();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   return (
@@ -19,7 +21,11 @@ export function HomeHeader() {
           borderColor="blue.500"
         >
           <Image
-            source={avatarImg}
+            source={
+              user.avatar
+                ? { uri: `${api.defaults.baseURL}/images/${user.avatar}` }
+                : avatarImg
+            }
             alt="avatar"
             size="44px"
             resizeMode="cover"
@@ -29,8 +35,8 @@ export function HomeHeader() {
 
         <VStack ml={2}>
           <Text fontSize="md">Boas vindas,</Text>
-          <Heading fontFamily="heading" fontSize="md">
-            Marcelo!
+          <Heading fontFamily="heading" fontSize="md" numberOfLines={1}>
+            {user.name}!
           </Heading>
         </VStack>
       </HStack>

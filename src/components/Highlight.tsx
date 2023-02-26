@@ -1,11 +1,13 @@
+import { useAuth } from "@hooks/useAuth";
+import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { Heading, HStack, VStack, Text, useTheme } from "native-base";
 import { ArrowRight, Tag } from "phosphor-react-native";
-import { TouchableOpacity } from "react-native";
 
 export function Highlight() {
   const { colors } = useTheme();
+  const { user } = useAuth();
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 

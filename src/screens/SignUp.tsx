@@ -203,6 +203,7 @@ export function SignUp() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.name?.message}
+                  rounded={6}
                 />
               )}
             />
@@ -218,6 +219,7 @@ export function SignUp() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.email?.message}
+                  rounded={6}
                 />
               )}
             />
@@ -232,6 +234,7 @@ export function SignUp() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.tel?.message}
+                  rounded={6}
                 />
               )}
             />
@@ -247,7 +250,7 @@ export function SignUp() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.password?.message}
-                  isPasswordInput
+                  rounded={6}
                 />
               )}
             />
@@ -265,7 +268,7 @@ export function SignUp() {
                   onSubmitEditing={handleSubmit(handleSignUp)}
                   returnKeyType="send"
                   errorMessage={errors.password_confirm?.message}
-                  isPasswordInput
+                  rounded={6}
                 />
               )}
             />

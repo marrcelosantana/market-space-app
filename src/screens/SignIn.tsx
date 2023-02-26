@@ -30,8 +30,9 @@ type FormData = {
 export function SignIn() {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const toast = useToast();
+  const [showPassword, setShowPassword] = useState(true);
 
+  const toast = useToast();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -101,12 +102,14 @@ export function SignIn() {
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Senha"
-                  secureTextEntry
+                  secureTextEntry={showPassword}
                   flex={1}
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.password?.message}
                   isPasswordInput
+                  showPassword={showPassword}
+                  setShowpassword={setShowPassword}
                 />
               )}
             />
