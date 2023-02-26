@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   VStack,
   Image,
@@ -7,8 +8,10 @@ import {
   Center,
   HStack,
   Pressable,
+  useToast,
 } from "native-base";
 
+import { useForm, Controller } from "react-hook-form";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
@@ -21,9 +24,14 @@ import { PencilSimpleLine } from "phosphor-react-native";
 import logoImg from "@assets/logo.png";
 import avatarImg from "@assets/avatar.png";
 
-import { useForm, Controller } from "react-hook-form";
+import * as ImagePicker from "expo-image-picker";
 import * as yup from "yup";
+
+import { api } from "@services/api";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { AppError } from "@utils/AppError";
+import { Alert } from "react-native";
+import { UserPhoto } from "@components/UserPhoto";
 
 type FormData = {
   name: string;
@@ -52,7 +60,10 @@ const signUpSchema = yup.object({
 });
 
 export function SignUp() {
+  const [userPhoto, setUserPhoto] = useState<string>("");
+
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+  const toast = useToast();
 
   const {
     control,
@@ -62,14 +73,43 @@ export function SignUp() {
     resolver: yupResolver(signUpSchema),
   });
 
-  function handleSignUp({
-    name,
-    email,
-    phone,
-    password,
-    password_confirm,
-  }: FormData) {
-    console.log({ name, email, phone, password, password_confirm });
+  async function handleUserPhotoSelect() {
+    const photoSelected = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      aspect: [4, 4],
+      allowsEditing: true,
+    });
+
+    if (photoSelected.canceled) {
+      return;
+    }
+
+    if (photoSelected.assets[0].uri) {
+      setUserPhoto(photoSelected.assets[0].uri);
+    }
+  }
+
+  async function handleSignUp({ name, email, phone, password }: FormData) {
+    try {
+      const data = { name, email, phone, password, avatar: userPhoto };
+
+      const response = await api.post("/users", data);
+      console.log(response.data);
+
+      Alert.alert("Usuário adicionado com sucesso!");
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possivel criar a conta.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   return (
@@ -90,31 +130,10 @@ export function SignUp() {
             </Text>
           </Center>
 
-          <Center>
-            <HStack
-              w={24}
-              h={24}
-              mt={4}
-              rounded="full"
-              flex={1}
-              alignItems="center"
-              justifyContent="center"
-            >
-              <Image source={avatarImg} alt="avatar" />
-              <Pressable
-                w={10}
-                h={10}
-                rounded="full"
-                alignItems="center"
-                justifyContent="center"
-                bgColor="blue.500"
-                ml={-8}
-                mt={12}
-              >
-                <PencilSimpleLine size={22} color="#fff" />
-              </Pressable>
-            </HStack>
-          </Center>
+          <UserPhoto
+            userPhoto={userPhoto}
+            choosePhoto={handleUserPhotoSelect}
+          />
 
           <Center mt={8}>
             <Controller
