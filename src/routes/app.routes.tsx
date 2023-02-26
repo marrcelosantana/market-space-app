@@ -12,12 +12,17 @@ import { MyAds } from "@screens/MyAds";
 import { UpdateAd } from "@screens/UpdateAd";
 import { AdPreview } from "@screens/AdPreview";
 
-import { House, Tag } from "phosphor-react-native";
+import { House, SignOut, Tag } from "phosphor-react-native";
 import { MyAdDetails } from "@screens/MyAdDetails";
+import { Loading } from "@components/Loading";
+import { useAuth } from "@hooks/useAuth";
+import { useEffect } from "react";
 
 type AppRoutes = {
   home: undefined;
   myAds: undefined;
+  signOut: undefined;
+
   create: undefined;
   details: undefined;
   update: undefined;
@@ -61,6 +66,25 @@ export function AppRoutes() {
         component={MyAds}
         options={{
           tabBarIcon: ({ color }) => <Tag size={24} color={color} />,
+        }}
+      />
+
+      <Screen
+        name="signOut"
+        component={() => {
+          const { signOut } = useAuth();
+
+          async function handleSignOut() {
+            await signOut();
+          }
+
+          useEffect(() => {
+            handleSignOut();
+          }, []);
+          return <Loading />;
+        }}
+        options={{
+          tabBarIcon: () => <SignOut size={24} color="#E07878" />,
         }}
       />
 
