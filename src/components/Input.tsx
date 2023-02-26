@@ -1,19 +1,53 @@
-import { Input as NativeBaseInput, IInputProps } from "native-base";
+import {
+  Input as NativeBaseInput,
+  IInputProps,
+  FormControl,
+  HStack,
+} from "native-base";
 
-export function Input({ ...rest }: IInputProps) {
+import { ShowPassWordButton } from "./ShowPasswordButton";
+
+type Props = IInputProps & {
+  errorMessage?: string | null;
+  isPasswordInput?: boolean;
+};
+
+export function Input({
+  errorMessage,
+  isInvalid,
+  isPasswordInput = false,
+  ...rest
+}: Props) {
+  const invalid = !!errorMessage || isInvalid;
+
   return (
-    <NativeBaseInput
-      h={45}
-      rounded={0}
-      bgColor="gray.100"
-      borderWidth={0}
-      fontSize="md"
-      color="gray.600"
-      fontFamily="body"
-      mb={4}
-      placeholderTextColor="gray.400"
-      _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
-      {...rest}
-    />
+    <FormControl isInvalid={invalid} mb={4}>
+      <HStack alignItems="center" justifyContent="center">
+        <NativeBaseInput
+          w="full"
+          h={45}
+          rounded={0}
+          bgColor="gray.100"
+          borderWidth={0}
+          fontSize="md"
+          color="gray.600"
+          fontFamily="body"
+          placeholderTextColor="gray.400"
+          _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
+          isInvalid={invalid}
+          _invalid={{
+            borderWidth: 1,
+            borderColor: "red.500",
+          }}
+          position="relative"
+          {...rest}
+        />
+        {isPasswordInput && <ShowPassWordButton />}
+      </HStack>
+
+      <FormControl.ErrorMessage _text={{ color: "red.500" }}>
+        {errorMessage}
+      </FormControl.ErrorMessage>
+    </FormControl>
   );
 }

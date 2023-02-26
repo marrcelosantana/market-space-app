@@ -15,10 +15,26 @@ import logoImg from "@assets/logo.png";
 
 import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
-import { ShowPassWordButton } from "@components/ShowPasswordButton";
+
+import { useForm, Controller } from "react-hook-form";
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export function SignIn() {
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({});
+
+  function handleSignIn({ email, password }: FormData) {
+    console.log({ email, password });
+  }
 
   return (
     <ScrollView
@@ -39,15 +55,39 @@ export function SignIn() {
         <Center mt={16}>
           <Text mb={4}>Acesse sua conta</Text>
 
-          <Input
-            placeholder="Email"
-            keyboardType="email-address"
-            autoCapitalize="none"
+          <Controller
+            control={control}
+            name="email"
+            rules={{ required: "Informe o email." }}
+            render={({ field: { onChange, value } }) => (
+              <Input
+                placeholder="Email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                onChangeText={onChange}
+                value={value}
+                errorMessage={errors.email?.message}
+              />
+            )}
           />
 
           <HStack width="full">
-            <Input placeholder="Senha" secureTextEntry flex={1} />
-            <ShowPassWordButton />
+            <Controller
+              control={control}
+              name="password"
+              rules={{ required: "Informe a senha." }}
+              render={({ field: { onChange, value } }) => (
+                <Input
+                  placeholder="Senha"
+                  secureTextEntry
+                  flex={1}
+                  onChangeText={onChange}
+                  value={value}
+                  errorMessage={errors.password?.message}
+                  isPasswordInput
+                />
+              )}
+            />
           </HStack>
 
           <ButtonLG
@@ -55,6 +95,7 @@ export function SignIn() {
             bgColor="blue.500"
             textColor="gray.100"
             mt={4}
+            onPress={handleSubmit(handleSignIn)}
           />
         </Center>
       </VStack>
