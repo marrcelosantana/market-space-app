@@ -35,6 +35,7 @@ import { useAuth } from "@hooks/useAuth";
 
 import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
+import { Alert } from "react-native";
 
 type RouteParams = {
   productId: string;
@@ -88,6 +89,41 @@ export function MyAdDetails() {
     } finally {
       setChangeStatusLoading(false);
     }
+  }
+
+  async function removeAd() {
+    try {
+      setIsLoading(true);
+      await api.delete(`/products/${productId}`);
+
+      toast.show({
+        title: "Anúncio removido!",
+        placement: "top",
+        bgColor: "green.500",
+      });
+
+      navigation.navigate("myAds");
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível remover o anúncio.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleRemoveAd() {
+    Alert.alert("Remover", "Deseja remover o anúncio?", [
+      { text: "Não", style: "cancel" },
+      { text: "Sim", onPress: () => removeAd() },
+    ]);
   }
 
   async function loadProductData() {
@@ -220,7 +256,7 @@ export function MyAdDetails() {
             <VStack mt={6}>
               <ButtonLG
                 title={
-                  product.is_active ? "Desativar anúncio" : "Retivar anúncio"
+                  product.is_active ? "Desativar anúncio" : "Reativar anúncio"
                 }
                 bgColor={product.is_active ? "gray.700" : "blue.500"}
                 textColor="gray.100"
@@ -230,7 +266,13 @@ export function MyAdDetails() {
                 onPress={handleChangeStatus}
                 isLoading={changeStatusLoading}
               />
-              <ButtonLG title="Excluir anúncio" iconName="trash" mb={10} />
+              <ButtonLG
+                title="Excluir anúncio"
+                iconName="trash"
+                mb={10}
+                isLoading={isLoading}
+                onPress={handleRemoveAd}
+              />
             </VStack>
           </VStack>
         </ScrollView>
