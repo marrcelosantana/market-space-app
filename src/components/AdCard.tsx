@@ -11,35 +11,31 @@ import {
 
 import { AdStatusTag } from "@components/AdStatusTag";
 import { Avatar } from "@components/Avatar";
-
-import productImg from "@assets/shoes.png";
+import { ProductDTO } from "@models/ProductDTO";
+import { priceFormatter } from "@utils/formatter";
+import { api } from "@services/api";
 
 type Props = IPressableProps & {
-  title: string;
-  price: any;
-  type?: string;
+  product: ProductDTO;
   isActive?: boolean;
 };
 
-export function AdCard({
-  title,
-  price,
-  type,
-  isActive = true,
-  ...rest
-}: Props) {
+export function AdCard({ product, ...rest }: Props) {
   return (
     <Pressable {...rest} w="50%">
       <VStack bgColor={"gray.200"} paddingBottom={2} rounded={6} m={2}>
         <Box>
           <Image
-            source={productImg}
+            source={{
+              uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
+            }}
             alt="imagem do produto"
             width="full"
+            h={24}
             rounded={6}
             position="relative"
             resizeMode="cover"
-            style={isActive === false && { opacity: 0.4 }}
+            style={product.is_active === false && { opacity: 0.4 }}
           />
 
           <HStack
@@ -52,15 +48,18 @@ export function AdCard({
           >
             <Avatar
               borderColor="white"
-              uri="http://github.com/marrcelosantana.png"
+              uri={`${api.defaults.baseURL}/images/${product.user.avatar}`}
             />
 
-            <Box mt={-2} style={isActive === false && { opacity: 0.4 }}>
-              <AdStatusTag title={type} />
+            <Box
+              mt={-2}
+              style={product.is_active === false && { opacity: 0.4 }}
+            >
+              <AdStatusTag title={product.is_new ? "novo" : "usado"} />
             </Box>
           </HStack>
 
-          {isActive === false && (
+          {product.is_active === false && (
             <Text
               position="absolute"
               mt={20}
@@ -76,10 +75,10 @@ export function AdCard({
 
         <VStack mt={2}>
           <Text color="gray.600" fontSize="sm" numberOfLines={1}>
-            {title}
+            {product.name}
           </Text>
           <Heading fontFamily="heading" color="gray.700" fontSize="xs">
-            {price}
+            {priceFormatter.format(product.price / 100)}
           </Heading>
         </VStack>
       </VStack>

@@ -16,15 +16,14 @@ import {
 } from "native-base";
 
 import { Plus, SmileyXEyes } from "phosphor-react-native";
-import { useUserProducts } from "@hooks/useUserProducts";
 
 import { MyAdCard } from "@components/MyAdCard";
 import { Loading } from "@components/Loading";
+import { useProducts } from "@hooks/useProducts";
 
 export function MyAds() {
   const { colors } = useTheme();
-  const { userProducts, loadUserProducts, isLoadingProducts } =
-    useUserProducts();
+  const { userProducts, loadUserProducts, isLoadingProducts } = useProducts();
 
   const [adStatusType, setAdStatusType] = useState<string>("default");
 

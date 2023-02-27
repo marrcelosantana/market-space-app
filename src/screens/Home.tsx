@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
+  Center,
   FlatList,
   HStack,
   Input,
   Pressable,
   Text,
   useTheme,
+  useToast,
   VStack,
 } from "native-base";
 
@@ -14,29 +16,30 @@ import { AdCard } from "@components/AdCard";
 import { Highlight } from "@components/Highlight";
 import { HomeHeader } from "@components/HomeHeader";
 
-import { MagnifyingGlass, Sliders } from "phosphor-react-native";
+import { MagnifyingGlass, Sliders, SmileyXEyes } from "phosphor-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { FilterModal } from "@components/FilterModal";
 
-export function Home() {
-  const [products, setProducts] = useState([
-    { id: 1, title: "Tênis vermelho", price: "R$ 59,90", type: "usado" },
-    { id: 2, title: "Tênis azul", price: "R$ 29,90", type: "novo" },
-    { id: 3, title: "Tênis branco", price: "R$ 49,90", type: "novo" },
-    { id: 4, title: "Tênis amarelo", price: "R$ 79,90", type: "usado" },
-    { id: 5, title: "Tênis verde", price: "R$ 79,90", type: "novo" },
-    { id: 6, title: "Tênis preto", price: "R$ 79,90", type: "usado" },
-  ]);
+import { Loading } from "@components/Loading";
+import { useProducts } from "@hooks/useProducts";
 
+export function Home() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const { colors } = useTheme();
+  const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  const { products, loadProducts, isLoadingProducts } = useProducts();
 
   function handleOpenCard() {
     navigation.navigate("details");
   }
+
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
   return (
     <VStack flex={1} px={6}>
@@ -92,20 +95,28 @@ export function Home() {
         </Pressable>
       </HStack>
 
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.title}
-        renderItem={({ item }) => (
-          <AdCard
-            title={item.title}
-            price={item.price}
-            type={item.type}
-            onPress={handleOpenCard}
-          />
-        )}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-      />
+      {isLoadingProducts ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <AdCard product={item} onPress={handleOpenCard} />
+          )}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={[products.length === 0 && { flex: 1 }]}
+          ListEmptyComponent={() => (
+            <Center flex={1}>
+              <SmileyXEyes size={62} color={colors.gray[500]} />
+              <Text fontSize="md" color="gray.500">
+                Sem anúncios no momento.
+              </Text>
+            </Center>
+          )}
+        />
+      )}
 
       <FilterModal
         modalVisible={modalVisible}

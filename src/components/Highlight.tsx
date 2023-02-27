@@ -6,11 +6,10 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import { ArrowRight, Tag } from "phosphor-react-native";
-
-import { useUserProducts } from "@hooks/useUserProducts";
+import { useProducts } from "@hooks/useProducts";
 
 export function Highlight() {
-  const { userProducts, loadUserProducts } = useUserProducts();
+  const { userProducts, loadUserProducts } = useProducts();
   const [activeProducts, setActiveProducts] = useState(0);
 
   const { colors } = useTheme();

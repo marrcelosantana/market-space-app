@@ -12,7 +12,7 @@ import { Loading } from "@components/Loading";
 import { Routes } from "@routes/index";
 
 import { AuthContextProvider } from "@contexts/AuthContext";
-import { UserProductsContextProvider } from "@contexts/UserProductsContext";
+import { ProductsContextProvider } from "@contexts/ProductsContext";
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useFonts({
@@ -28,9 +28,9 @@ export default function App() {
         translucent
       />
       <AuthContextProvider>
-        <UserProductsContextProvider>
+        <ProductsContextProvider>
           {fontsLoaded ? <Routes /> : <Loading />}
-        </UserProductsContextProvider>
+        </ProductsContextProvider>
       </AuthContextProvider>
     </NativeBaseProvider>
   );
