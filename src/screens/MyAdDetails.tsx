@@ -72,7 +72,7 @@ export function MyAdDetails() {
       toast.show({
         title: "Status do anúncio atualizado!",
         placement: "top",
-        bgColor: "blue.500",
+        bgColor: "green.500",
       });
     } catch (error) {
       const isAppError = error instanceof AppError;
@@ -220,9 +220,9 @@ export function MyAdDetails() {
             <VStack mt={6}>
               <ButtonLG
                 title={
-                  product.is_active ? "Desativar anúncio" : "Ativar anúncio"
+                  product.is_active ? "Desativar anúncio" : "Retivar anúncio"
                 }
-                bgColor="gray.700"
+                bgColor={product.is_active ? "gray.700" : "blue.500"}
                 textColor="gray.100"
                 iconName="power"
                 iconColor="white"
