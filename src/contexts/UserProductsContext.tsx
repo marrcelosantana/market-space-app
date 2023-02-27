@@ -1,19 +1,14 @@
-import { ProductDTO } from "@models/ProductDTO";
-import { useFocusEffect } from "@react-navigation/native";
-import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
+import { createContext, ReactNode, useState } from "react";
 import { useToast } from "native-base";
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+
+import { api } from "@services/api";
+import { ProductDTO } from "@models/ProductDTO";
+import { AppError } from "@utils/AppError";
 
 export type UserProductsDataProps = {
   userProducts: ProductDTO[];
   loadUserProducts: () => Promise<void>;
+  isLoadingProducts: boolean;
 };
 
 type UserProductsProvider = {
@@ -28,7 +23,7 @@ export function UserProductsContextProvider({
   children,
 }: UserProductsProvider) {
   const [userProducts, setUserProducts] = useState<ProductDTO[]>([]);
-  const [loadingProducts, setIsLoadingProducts] = useState(false);
+  const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
   const toast = useToast();
 
@@ -52,7 +47,9 @@ export function UserProductsContextProvider({
   }
 
   return (
-    <UserProductsContext.Provider value={{ userProducts, loadUserProducts }}>
+    <UserProductsContext.Provider
+      value={{ userProducts, loadUserProducts, isLoadingProducts }}
+    >
       {children}
     </UserProductsContext.Provider>
   );
