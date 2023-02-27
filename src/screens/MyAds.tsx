@@ -15,8 +15,9 @@ import {
 } from "native-base";
 
 import { Plus } from "phosphor-react-native";
-import { MyAdCard } from "@components/MyAdCard";
 import { useUserProducts } from "@hooks/useUserProducts";
+
+import { MyAdCard } from "@components/MyAdCard";
 import { Loading } from "@components/Loading";
 
 export function MyAds() {
@@ -24,12 +25,24 @@ export function MyAds() {
   const { userProducts, loadUserProducts, isLoadingProducts } =
     useUserProducts();
 
-  const [adType, setAdType] = useState<string>();
+  const [adStatusType, setAdStatusType] = useState<string>("default");
+
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   function handleOpenMyAdDetails(productId: string) {
     navigation.navigate("my_ad_details", { productId });
   }
+
+  const filteredList = userProducts.filter((item) => {
+    switch (adStatusType) {
+      case "active":
+        return item.is_active === true;
+      case "inactive":
+        return item.is_active === false;
+      default:
+        return userProducts;
+    }
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -60,11 +73,11 @@ export function MyAds() {
             mb={4}
           >
             <Text fontSize="md" color="gray.600">
-              {userProducts.length} anúncios
+              {filteredList.length} anúncio(s)
             </Text>
 
             <Select
-              selectedValue={adType}
+              selectedValue={adStatusType}
               minWidth="111"
               fontSize="sm"
               accessibilityLabel="Filtrar..."
@@ -74,16 +87,16 @@ export function MyAds() {
                 endIcon: <CheckIcon size="5" />,
               }}
               mt={1}
-              onValueChange={(value) => setAdType(value)}
+              onValueChange={(value) => setAdStatusType(value)}
             >
-              <Select.Item label="Todos" value="all" />
+              <Select.Item label="Todos" value="default" />
               <Select.Item label="Ativos" value="active" />
               <Select.Item label="Inativos" value="inactive" />
             </Select>
           </HStack>
 
           <FlatList
-            data={userProducts}
+            data={filteredList}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <MyAdCard
