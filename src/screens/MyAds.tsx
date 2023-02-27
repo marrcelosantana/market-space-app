@@ -19,10 +19,10 @@ import { MyAdCard } from "@components/MyAdCard";
 import { useUserProducts } from "@hooks/useUserProducts";
 
 export function MyAds() {
+  const { colors } = useTheme();
   const { userProducts, loadUserProducts } = useUserProducts();
 
   const [adType, setAdType] = useState<string>();
-  const { colors } = useTheme();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   useFocusEffect(

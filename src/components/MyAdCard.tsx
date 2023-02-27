@@ -14,6 +14,7 @@ import productImg from "@assets/no-photo.jpg";
 import { api } from "@services/api";
 import { AdStatusTag } from "@components/AdStatusTag";
 import { ProductDTO } from "@models/ProductDTO";
+import { priceFormatter } from "@utils/formatter";
 
 type Props = IPressableProps & {
   product: ProductDTO;
@@ -70,7 +71,7 @@ export function MyAdCard({ product, ...rest }: Props) {
             {product.name}
           </Text>
           <Heading fontFamily="heading" color="gray.700" fontSize="xs">
-            R$ {product.price / 100}
+            {priceFormatter.format(product.price / 100)}
           </Heading>
         </VStack>
       </VStack>
