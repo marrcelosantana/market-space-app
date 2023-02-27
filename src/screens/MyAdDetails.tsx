@@ -70,9 +70,9 @@ export function MyAdDetails() {
       });
 
       toast.show({
-        title: "Status atualizado!",
+        title: "Status do anúncio atualizado!",
         placement: "top",
-        bgColor: "orange.500",
+        bgColor: "blue.500",
       });
     } catch (error) {
       const isAppError = error instanceof AppError;
