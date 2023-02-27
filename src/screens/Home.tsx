@@ -111,7 +111,7 @@ export function Home() {
             <Center flex={1}>
               <SmileyXEyes size={62} color={colors.gray[500]} />
               <Text fontSize="md" color="gray.500">
-                Sem anúncios no momento.
+                Sem anúncios para mostrar.
               </Text>
             </Center>
           )}

@@ -107,12 +107,12 @@ export function MyAds() {
             )}
             numColumns={2}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={[userProducts.length === 0 && { flex: 1 }]}
+            contentContainerStyle={[filteredList.length === 0 && { flex: 1 }]}
             ListEmptyComponent={() => (
               <Center flex={1}>
                 <SmileyXEyes size={62} color={colors.gray[500]} />
                 <Text fontSize="md" color="gray.500">
-                  Você ainda não possui anúncios.
+                  Sem anúncios para mostrar.
                 </Text>
               </Center>
             )}
