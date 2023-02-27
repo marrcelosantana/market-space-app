@@ -1,8 +1,15 @@
 import { ProductDTO } from "@models/ProductDTO";
+import { useFocusEffect } from "@react-navigation/native";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
 import { useToast } from "native-base";
-import { createContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 export type UserProductsDataProps = {
   userProducts: ProductDTO[];
@@ -39,6 +46,7 @@ export function UserProductsContextProvider({
       });
     }
   }
+
   return (
     <UserProductsContext.Provider value={{ userProducts, loadUserProducts }}>
       {children}

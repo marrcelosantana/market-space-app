@@ -60,6 +60,7 @@ export function Home() {
           flex={1}
           h={45}
           mb={2}
+          fontSize="md"
           rounded={0}
           bgColor="gray.100"
           borderWidth={0}

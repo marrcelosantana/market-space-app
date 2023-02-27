@@ -28,9 +28,9 @@ export default function App() {
         translucent
       />
       <AuthContextProvider>
-        <UserProductsContextProvider>
-          {fontsLoaded ? <Routes /> : <Loading />}
-        </UserProductsContextProvider>
+        {/* <UserProductsContextProvider> */}
+        {fontsLoaded ? <Routes /> : <Loading />}
+        {/* </UserProductsContextProvider> */}
       </AuthContextProvider>
     </NativeBaseProvider>
   );
