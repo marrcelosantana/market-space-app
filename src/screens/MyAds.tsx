@@ -27,6 +27,10 @@ export function MyAds() {
   const [adType, setAdType] = useState<string>();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
+  function handleOpenMyAdDetails(productId: string) {
+    navigation.navigate("my_ad_details", { productId });
+  }
+
   useFocusEffect(
     useCallback(() => {
       loadUserProducts();
@@ -84,7 +88,7 @@ export function MyAds() {
             renderItem={({ item }) => (
               <MyAdCard
                 product={item}
-                onPress={() => navigation.navigate("my_ad_details")}
+                onPress={() => handleOpenMyAdDetails(item.id)}
               />
             )}
             numColumns={2}

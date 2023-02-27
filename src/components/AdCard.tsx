@@ -50,7 +50,10 @@ export function AdCard({
             justifyContent="space-between"
             px={1}
           >
-            <Avatar borderColor="white" />
+            <Avatar
+              borderColor="white"
+              uri="http://github.com/marrcelosantana.png"
+            />
 
             <Box mt={-2} style={isActive === false && { opacity: 0.4 }}>
               <AdStatusTag title={type} />

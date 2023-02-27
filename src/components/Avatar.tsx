@@ -1,18 +1,17 @@
 import { Center, Image } from "native-base";
 
-import avatarImg from "@assets/man.png";
-
 type Props = {
   borderColor?: string;
+  uri: string;
 };
 
-export function Avatar({ borderColor }: Props) {
+export function Avatar({ borderColor, uri }: Props) {
   return (
-    <Center w={6} borderWidth={2} rounded="full" borderColor={borderColor}>
+    <Center w={8} borderWidth={2} rounded="full" borderColor={borderColor}>
       <Image
-        source={avatarImg}
+        source={{ uri: uri }}
         alt="imagem do usuário"
-        size={6}
+        size={8}
         rounded="full"
         resizeMode="cover"
       />

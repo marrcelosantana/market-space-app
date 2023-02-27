@@ -28,7 +28,7 @@ type AppRoutes = {
   details: undefined;
   update: undefined;
   preview: undefined;
-  my_ad_details: undefined;
+  my_ad_details: { productId: string };
 };
 
 export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;

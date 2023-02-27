@@ -34,7 +34,9 @@ export function UserProductsContextProvider({
       setUserProducts(response.data);
     } catch (error) {
       const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível logar.";
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
 
       toast.show({
         title,

@@ -16,7 +16,7 @@ export function PayMethod({ type }: Props) {
 
   return (
     <Box>
-      {type === "ticket" && (
+      {type === "boleto" && (
         <HStack alignItems="center" mb={1}>
           <Barcode size={18} color={colors.gray[600]} />
           <Text ml={2}>Boleto</Text>
@@ -30,14 +30,14 @@ export function PayMethod({ type }: Props) {
         </HStack>
       )}
 
-      {type === "money" && (
+      {type === "cash" && (
         <HStack alignItems="center" mb={1}>
           <Money size={18} color={colors.gray[600]} />
           <Text ml={2}>Dinheiro</Text>
         </HStack>
       )}
 
-      {type === "credit-card" && (
+      {type === "card" && (
         <HStack alignItems="center" mb={1}>
           <CreditCard size={18} color={colors.gray[600]} />
           <Text ml={2}>Cartão de Crédito</Text>
