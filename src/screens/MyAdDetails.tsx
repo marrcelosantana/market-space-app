@@ -43,6 +43,7 @@ type RouteParams = {
 export function MyAdDetails() {
   const [product, setProduct] = useState({} as ProductDTO);
   const [isLoading, setIsLoading] = useState(false);
+  const [changeStatusLoading, setChangeStatusLoading] = useState(false);
 
   const { user } = useAuth();
   const { colors } = useTheme();
@@ -52,6 +53,42 @@ export function MyAdDetails() {
 
   const route = useRoute();
   const { productId } = route.params as RouteParams;
+
+  async function handleChangeStatus() {
+    try {
+      setChangeStatusLoading(true);
+
+      await api.patch(`/products/${productId}`, {
+        is_active: !product.is_active,
+      });
+
+      setProduct((state) => {
+        return {
+          ...state,
+          is_active: !state.is_active,
+        };
+      });
+
+      toast.show({
+        title: "Status atualizado!",
+        placement: "top",
+        bgColor: "orange.500",
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar o status.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setChangeStatusLoading(false);
+    }
+  }
 
   async function loadProductData() {
     try {
@@ -182,12 +219,16 @@ export function MyAdDetails() {
 
             <VStack mt={6}>
               <ButtonLG
-                title="Desativar anúncio"
+                title={
+                  product.is_active ? "Desativar anúncio" : "Ativar anúncio"
+                }
                 bgColor="gray.700"
                 textColor="gray.100"
                 iconName="power"
                 iconColor="white"
                 mb={3}
+                onPress={handleChangeStatus}
+                isLoading={changeStatusLoading}
               />
               <ButtonLG title="Excluir anúncio" iconName="trash" mb={10} />
             </VStack>
