@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
@@ -12,42 +12,18 @@ import {
   Select,
   CheckIcon,
   FlatList,
-  useToast,
 } from "native-base";
 
 import { Plus } from "phosphor-react-native";
 import { MyAdCard } from "@components/MyAdCard";
-
 import { useUserProducts } from "@hooks/useUserProducts";
-import { ProductDTO } from "@models/ProductDTO";
-import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
 
 export function MyAds() {
+  const { userProducts, loadUserProducts } = useUserProducts();
+
   const [adType, setAdType] = useState<string>();
-  const [userProducts, setUserProducts] = useState<ProductDTO[]>([]);
-
   const { colors } = useTheme();
-  const toast = useToast();
-  // const { userProducts } = useUserProducts();
-
   const navigation = useNavigation<AppNavigatorRoutesProps>();
-
-  async function loadUserProducts() {
-    try {
-      const response = await api.get("users/products");
-      setUserProducts(response.data);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível logar.";
-
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-      });
-    }
-  }
 
   useFocusEffect(
     useCallback(() => {

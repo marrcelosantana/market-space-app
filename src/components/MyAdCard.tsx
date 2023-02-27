@@ -9,11 +9,11 @@ import {
   IPressableProps,
 } from "native-base";
 
-import { AdStatusTag } from "@components/AdStatusTag";
-
 import productImg from "@assets/no-photo.jpg";
-import { ProductDTO } from "@models/ProductDTO";
+
 import { api } from "@services/api";
+import { AdStatusTag } from "@components/AdStatusTag";
+import { ProductDTO } from "@models/ProductDTO";
 
 type Props = IPressableProps & {
   product: ProductDTO;

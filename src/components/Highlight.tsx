@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
-import { Heading, HStack, VStack, Text, useTheme, useToast } from "native-base";
+import { Heading, HStack, VStack, Text, useTheme } from "native-base";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
@@ -8,39 +8,18 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ArrowRight, Tag } from "phosphor-react-native";
 
 import { useUserProducts } from "@hooks/useUserProducts";
-import { ProductDTO } from "@models/ProductDTO";
-import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
 
 export function Highlight() {
-  // const { userProducts } = useUserProducts();
-  const { colors } = useTheme();
-  const toast = useToast();
-  const [userProducts, setUserProducts] = useState<ProductDTO[]>([]);
-
+  const { userProducts, loadUserProducts } = useUserProducts();
   const [activeProducts, setActiveProducts] = useState(0);
+
+  const { colors } = useTheme();
 
   function findActiveProducts() {
     const data = userProducts.filter(
       (product) => product.is_active === true
     ).length;
     setActiveProducts(data);
-  }
-
-  async function loadUserProducts() {
-    try {
-      const response = await api.get("users/products");
-      setUserProducts(response.data);
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError ? error.message : "Não foi possível logar.";
-
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-      });
-    }
   }
 
   useFocusEffect(

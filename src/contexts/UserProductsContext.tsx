@@ -28,11 +28,13 @@ export function UserProductsContextProvider({
   children,
 }: UserProductsProvider) {
   const [userProducts, setUserProducts] = useState<ProductDTO[]>([]);
+  const [loadingProducts, setIsLoadingProducts] = useState(false);
 
   const toast = useToast();
 
   async function loadUserProducts() {
     try {
+      setIsLoadingProducts(true);
       const response = await api.get("users/products");
       setUserProducts(response.data);
     } catch (error) {
@@ -44,6 +46,8 @@ export function UserProductsContextProvider({
         placement: "top",
         bgColor: "red.500",
       });
+    } finally {
+      setIsLoadingProducts(false);
     }
   }
 
