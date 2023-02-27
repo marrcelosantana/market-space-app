@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Alert } from "react-native";
 
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import {
@@ -35,7 +36,6 @@ import { useAuth } from "@hooks/useAuth";
 
 import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
-import { Alert } from "react-native";
 
 type RouteParams = {
   productId: string;

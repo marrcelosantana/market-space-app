@@ -12,9 +12,10 @@ import {
   Select,
   CheckIcon,
   FlatList,
+  Center,
 } from "native-base";
 
-import { Plus } from "phosphor-react-native";
+import { Plus, SmileyXEyes } from "phosphor-react-native";
 import { useUserProducts } from "@hooks/useUserProducts";
 
 import { MyAdCard } from "@components/MyAdCard";
@@ -88,6 +89,7 @@ export function MyAds() {
               }}
               mt={1}
               onValueChange={(value) => setAdStatusType(value)}
+              isDisabled={userProducts.length === 0}
             >
               <Select.Item label="Todos" value="default" />
               <Select.Item label="Ativos" value="active" />
@@ -106,6 +108,15 @@ export function MyAds() {
             )}
             numColumns={2}
             showsVerticalScrollIndicator={false}
+            contentContainerStyle={[userProducts.length === 0 && { flex: 1 }]}
+            ListEmptyComponent={() => (
+              <Center flex={1}>
+                <SmileyXEyes size={62} color={colors.gray[500]} />
+                <Text fontSize="md" color="gray.500">
+                  Você ainda não possui anúncios.
+                </Text>
+              </Center>
+            )}
           />
         </VStack>
       )}
