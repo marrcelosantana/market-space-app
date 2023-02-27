@@ -33,8 +33,8 @@ export function Home() {
 
   const { products, loadProducts, isLoadingProducts } = useProducts();
 
-  function handleOpenCard() {
-    navigation.navigate("details");
+  function handleOpenCard(productId: string) {
+    navigation.navigate("details", { productId });
   }
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export function Home() {
           data={products}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <AdCard product={item} onPress={handleOpenCard} />
+            <AdCard product={item} onPress={() => handleOpenCard(item.id)} />
           )}
           numColumns={2}
           showsVerticalScrollIndicator={false}

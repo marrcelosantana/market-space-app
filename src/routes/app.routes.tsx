@@ -25,7 +25,7 @@ type AppRoutes = {
   signOut: undefined;
 
   create: undefined;
-  details: undefined;
+  details: { productId: string };
   update: undefined;
   preview: undefined;
   my_ad_details: { productId: string };
