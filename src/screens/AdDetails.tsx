@@ -18,6 +18,8 @@ import {
   useToast,
 } from "native-base";
 
+import productImg from "@assets/no-photo.jpg";
+
 import { ArrowLeft, WhatsappLogo } from "phosphor-react-native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ProductDTO } from "@models/ProductDTO";
@@ -92,9 +94,13 @@ export function AdDetails() {
           <ScrollView showsVerticalScrollIndicator={false}>
             <VStack flex={1}>
               <Image
-                source={{
-                  uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
-                }}
+                source={
+                  product.product_images !== undefined
+                    ? {
+                        uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
+                      }
+                    : productImg
+                }
                 alt="imagem do produto"
                 width="full"
                 h={72}
@@ -105,9 +111,17 @@ export function AdDetails() {
               <HStack px={8} alignItems="center" mb={4}>
                 <Avatar
                   borderColor="blue.500"
-                  uri={`${api.defaults.baseURL}/images/${product.user.avatar}`}
+                  uri={
+                    product.user
+                      ? `${api.defaults.baseURL}/images/${product.user.avatar}`
+                      : "img"
+                  }
                 />
-                <Text ml={2}>{product.user.name}</Text>
+                <Text ml={2}>
+                  {product.user
+                    ? product.user.name
+                    : "http://github.com/marrcelosantana.png"}
+                </Text>
               </HStack>
 
               <VStack px={8} pb={8}>
