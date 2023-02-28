@@ -18,8 +18,6 @@ import {
   useToast,
 } from "native-base";
 
-import productImg from "@assets/no-photo.jpg";
-
 import { ArrowLeft, WhatsappLogo } from "phosphor-react-native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ProductDTO } from "@models/ProductDTO";

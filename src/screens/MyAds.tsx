@@ -19,6 +19,7 @@ import { Plus, SmileyXEyes } from "phosphor-react-native";
 
 import { MyAdCard } from "@components/MyAdCard";
 import { Loading } from "@components/Loading";
+
 import { useProducts } from "@hooks/useProducts";
 
 export function MyAds() {
