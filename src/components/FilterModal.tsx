@@ -1,7 +1,14 @@
 import { useState } from "react";
-import { Checkbox, HStack, Modal, Switch, Text, VStack } from "native-base";
+import {
+  Checkbox,
+  HStack,
+  Modal,
+  Radio,
+  Switch,
+  Text,
+  VStack,
+} from "native-base";
 
-import { FilterStatusTag } from "@components/FilterStatusTag";
 import { ButtonMD } from "@components/ButtonMD";
 
 type Props = {
@@ -11,6 +18,15 @@ type Props = {
 
 export function FilterModal({ modalVisible, setModalVisible }: Props) {
   const [groupValues, setGroupValues] = useState([]);
+  const [isNew, setIsNew] = useState(true);
+  const [acceptTrade, setAcceptTrade] = useState(true);
+  const [payMethods, setPayMethods] = useState<string[]>([
+    "cash",
+    "pix",
+    "card",
+    "boleto",
+    "deposit",
+  ]);
 
   return (
     <>
@@ -34,10 +50,18 @@ export function FilterModal({ modalVisible, setModalVisible }: Props) {
               <Text color="gray.600" fontFamily="heading" mb={2}>
                 Condição
               </Text>
-              <HStack alignItems="center">
-                <FilterStatusTag title="novo" isSelected mr={4} />
-                <FilterStatusTag title="usado" />
-              </HStack>
+
+              <Radio.Group name="condition" colorScheme="gray">
+                <HStack>
+                  <Radio value="new" size="sm">
+                    <Text>Novo</Text>
+                  </Radio>
+
+                  <Radio value="used" size="sm" ml={4}>
+                    <Text>Usado</Text>
+                  </Radio>
+                </HStack>
+              </Radio.Group>
             </VStack>
 
             <VStack mt={4}>

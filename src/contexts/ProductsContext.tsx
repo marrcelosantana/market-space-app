@@ -10,7 +10,7 @@ export type ProductsDataProps = {
   products: ProductDTO[];
   isLoadingProducts: boolean;
   loadUserProducts: () => Promise<void>;
-  loadProducts: () => Promise<void>;
+  loadProducts: (query?: string) => Promise<void>;
 };
 
 type ProductsProvider = {
@@ -28,10 +28,12 @@ export function ProductsContextProvider({ children }: ProductsProvider) {
 
   const toast = useToast();
 
-  async function loadProducts() {
+  async function loadProducts(query?: string) {
     try {
       setIsLoadingProducts(true);
-      const response = await api.get("/products");
+      const response = await api.get(
+        query ? `/products/?&query=${query}` : `/products/`
+      );
       setProducts(response.data);
     } catch (error) {
       const isAppError = error instanceof AppError;

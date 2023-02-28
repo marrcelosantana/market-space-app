@@ -24,6 +24,19 @@ import { FilterModal } from "@components/FilterModal";
 import { Loading } from "@components/Loading";
 import { useProducts } from "@hooks/useProducts";
 
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { AppError } from "@utils/AppError";
+
+type FormData = {
+  query: string;
+};
+
+const searchSchema = yup.object({
+  query: yup.string().required("Informe a busca."),
+});
+
 export function Home() {
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -33,8 +46,29 @@ export function Home() {
 
   const { products, loadProducts, isLoadingProducts } = useProducts();
 
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: yupResolver(searchSchema),
+  });
+
   function handleOpenCard(productId: string) {
     navigation.navigate("details", { productId });
+  }
+
+  async function handleSearch({ query }: FormData) {
+    try {
+      await loadProducts(query);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
   }
 
   useEffect(() => {
@@ -58,19 +92,27 @@ export function Home() {
       </Text>
 
       <HStack>
-        <Input
-          placeholder="Buscar um anúncio"
-          flex={1}
-          h={45}
-          mb={2}
-          fontSize="md"
-          rounded={0}
-          bgColor="gray.100"
-          borderWidth={0}
-          color="gray.600"
-          fontFamily="body"
-          placeholderTextColor="gray.400"
-          _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
+        <Controller
+          name="query"
+          control={control}
+          render={({ field: { onChange, value } }) => (
+            <Input
+              onChangeText={onChange}
+              value={value}
+              placeholder="Buscar um anúncio"
+              flex={1}
+              h={45}
+              mb={2}
+              fontSize="md"
+              rounded={0}
+              bgColor="gray.100"
+              borderWidth={0}
+              color="gray.600"
+              fontFamily="body"
+              placeholderTextColor="gray.400"
+              _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
+            />
+          )}
         />
 
         <Pressable
@@ -79,6 +121,7 @@ export function Home() {
           bgColor="gray.100"
           h={45}
           px={2}
+          onPress={handleSubmit(handleSearch)}
         >
           <MagnifyingGlass size={20} color={colors.gray[600]} />
         </Pressable>
