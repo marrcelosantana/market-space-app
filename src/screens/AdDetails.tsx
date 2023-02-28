@@ -95,11 +95,9 @@ export function AdDetails() {
             <VStack flex={1}>
               <Image
                 source={
-                  product.product_images !== undefined
-                    ? {
-                        uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
-                      }
-                    : productImg
+                  product.product_images && {
+                    uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
+                  }
                 }
                 alt="imagem do produto"
                 width="full"
@@ -112,16 +110,11 @@ export function AdDetails() {
                 <Avatar
                   borderColor="blue.500"
                   uri={
-                    product.user
-                      ? `${api.defaults.baseURL}/images/${product.user.avatar}`
-                      : "img"
+                    product.user &&
+                    `${api.defaults.baseURL}/images/${product.user.avatar}`
                   }
                 />
-                <Text ml={2}>
-                  {product.user
-                    ? product.user.name
-                    : "http://github.com/marrcelosantana.png"}
-                </Text>
+                <Text ml={2}>{product.user && product.user.name}</Text>
               </HStack>
 
               <VStack px={8} pb={8}>
