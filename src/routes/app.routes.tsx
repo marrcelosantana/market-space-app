@@ -18,6 +18,7 @@ import { MyAdDetails } from "@screens/MyAdDetails";
 import { House, SignOut, Tag } from "phosphor-react-native";
 import { Loading } from "@components/Loading";
 import { useAuth } from "@hooks/useAuth";
+import { AdPreviewDTO } from "@models/AdPreviewDTO";
 
 type AppRoutes = {
   home: undefined;
@@ -27,7 +28,7 @@ type AppRoutes = {
   create: undefined;
   details: { productId: string };
   update: undefined;
-  preview: undefined;
+  preview: { adPreview: AdPreviewDTO };
   my_ad_details: { productId: string };
 };
 

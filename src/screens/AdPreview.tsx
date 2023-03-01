@@ -1,14 +1,37 @@
-import { Heading, HStack, Image, ScrollView, Text, VStack } from "native-base";
+import {
+  Heading,
+  HStack,
+  Image,
+  ScrollView,
+  Text,
+  useToast,
+  VStack,
+} from "native-base";
 
-import productImg from "@assets/bike.png";
 import { Avatar } from "@components/Avatar";
 import { AdStatusTag } from "@components/AdStatusTag";
 import { PayMethod } from "@components/PayMethod";
 import { ButtonMD } from "@components/ButtonMD";
-import { useNavigation } from "@react-navigation/native";
+
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
+import { AdPreviewDTO } from "@models/AdPreviewDTO";
+import { useAuth } from "@hooks/useAuth";
+import { priceFormatter } from "@utils/formatter";
+import { api } from "@services/api";
+
+type RouteParams = {
+  adPreview: AdPreviewDTO;
+};
+
 export function AdPreview() {
+  const { user } = useAuth();
+
+  const route = useRoute();
+  const { adPreview } = route.params as RouteParams;
+
+  const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   return (
@@ -30,7 +53,7 @@ export function AdPreview() {
         showsVerticalScrollIndicator={false}
       >
         <Image
-          source={productImg}
+          source={{ uri: adPreview.images[0].uri }}
           alt="produto"
           w="full"
           h="280px"
@@ -41,10 +64,10 @@ export function AdPreview() {
           <HStack alignItems="center">
             <Avatar
               borderColor="blue.500"
-              uri="http://github.com/marrcelosantana.png"
+              uri={`${api.defaults.baseURL}/images/${user.avatar}`}
             />
             <Text ml={2} color="gray.600" fontSize="sm">
-              Marcelo Santana
+              {user.name}
             </Text>
           </HStack>
 
@@ -58,25 +81,26 @@ export function AdPreview() {
                 numberOfLines={1}
                 overflow="hidden"
               >
-                Bicicleta Vermelha
+                {adPreview.title}
               </Heading>
               <Heading fontSize="lg" fontFamily="heading" color="blue.500">
-                R$ 135,00
+                {priceFormatter.format(Number(adPreview.price))}
               </Heading>
             </HStack>
 
             <Text numberOfLines={5} mt={2} color="gray.600">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Culpa
-              neque excepturi dicta accusamus, hic cupiditate impedit quam nam
-              aut possimus exercitationem, mollitia, reprehenderit explicabo
-              expedita voluptatem iste eligendi ad! Tempore!
+              {adPreview.description}
             </Text>
 
             <HStack alignItems="center" mt={6}>
               <Text fontFamily="heading" mr={2}>
                 Aceita troca?
               </Text>
-              <Text>Não</Text>
+              {adPreview.acceptTrade === true ? (
+                <Text>Sim</Text>
+              ) : (
+                <Text>Não</Text>
+              )}
             </HStack>
 
             <VStack mt={4}>
@@ -84,11 +108,9 @@ export function AdPreview() {
                 Método de pagamento
               </Text>
 
-              <PayMethod type="ticket" />
-              <PayMethod type="pix" />
-              <PayMethod type="money" />
-              <PayMethod type="credit-card" />
-              <PayMethod type="deposit" />
+              {adPreview.payMethods.map((item) => (
+                <PayMethod type={item} key={item} />
+              ))}
             </VStack>
           </VStack>
         </VStack>
