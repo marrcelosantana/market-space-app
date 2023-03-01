@@ -39,7 +39,10 @@ export function AdPreview() {
 
         <VStack px={8} mt={4} pb={8}>
           <HStack alignItems="center">
-            <Avatar borderColor="blue.500" />
+            <Avatar
+              borderColor="blue.500"
+              uri="http://github.com/marrcelosantana.png"
+            />
             <Text ml={2} color="gray.600" fontSize="sm">
               Marcelo Santana
             </Text>
