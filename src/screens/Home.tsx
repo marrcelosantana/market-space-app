@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { Keyboard } from "react-native";
+
 import {
   Box,
   Center,
@@ -12,51 +14,43 @@ import {
   VStack,
 } from "native-base";
 
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+
 import { AdCard } from "@components/AdCard";
 import { Highlight } from "@components/Highlight";
 import { HomeHeader } from "@components/HomeHeader";
-
-import { MagnifyingGlass, Sliders, SmileyXEyes } from "phosphor-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { FilterModal } from "@components/FilterModal";
-
 import { Loading } from "@components/Loading";
-import { useProducts } from "@hooks/useProducts";
 
-import { useForm, Controller } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  ArrowClockwise,
+  MagnifyingGlass,
+  Sliders,
+  SmileyXEyes,
+} from "phosphor-react-native";
+
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { AppError } from "@utils/AppError";
-
-type FormData = {
-  query: string;
-};
-
-const searchSchema = yup.object({
-  query: yup.string().required("Informe a busca."),
-});
+import { useProducts } from "@hooks/useProducts";
 
 export function Home() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const { products, loadProducts, isLoadingProducts } = useProducts();
 
   const { colors } = useTheme();
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-  const { products, loadProducts, isLoadingProducts } = useProducts();
-
-  const { control, handleSubmit } = useForm<FormData>({
-    resolver: yupResolver(searchSchema),
-  });
-
   function handleOpenCard(productId: string) {
     navigation.navigate("details", { productId });
   }
 
-  async function handleSearch({ query }: FormData) {
+  async function handleSearch(query: string) {
     try {
       await loadProducts(query);
+      Keyboard.dismiss();
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -71,9 +65,30 @@ export function Home() {
     }
   }
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
+  async function handleRefresh() {
+    try {
+      await loadProducts();
+      setSearch("");
+      Keyboard.dismiss();
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      loadProducts();
+    }, [])
+  );
 
   return (
     <VStack flex={1} px={6}>
@@ -92,27 +107,32 @@ export function Home() {
       </Text>
 
       <HStack>
-        <Controller
-          name="query"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <Input
-              onChangeText={onChange}
-              value={value}
-              placeholder="Buscar um anúncio"
-              flex={1}
-              h={45}
-              mb={2}
-              fontSize="md"
-              rounded={0}
-              bgColor="gray.100"
-              borderWidth={0}
-              color="gray.600"
-              fontFamily="body"
-              placeholderTextColor="gray.400"
-              _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
-            />
-          )}
+        <Pressable
+          alignItems="center"
+          justifyContent="center"
+          bgColor="gray.100"
+          h={45}
+          px={2}
+          onPress={handleRefresh}
+        >
+          <ArrowClockwise size={20} color={colors.gray[600]} />
+        </Pressable>
+
+        <Input
+          onChangeText={(search) => setSearch(search)}
+          value={search}
+          placeholder="Buscar um anúncio"
+          flex={1}
+          h={45}
+          mb={2}
+          fontSize="md"
+          rounded={0}
+          bgColor="gray.100"
+          borderWidth={0}
+          color="gray.600"
+          fontFamily="body"
+          placeholderTextColor="gray.400"
+          _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
         />
 
         <Pressable
@@ -121,7 +141,8 @@ export function Home() {
           bgColor="gray.100"
           h={45}
           px={2}
-          onPress={handleSubmit(handleSearch)}
+          onPress={() => handleSearch(search)}
+          disabled={search.length === 0}
         >
           <MagnifyingGlass size={20} color={colors.gray[600]} />
         </Pressable>
