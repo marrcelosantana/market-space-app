@@ -32,7 +32,7 @@ export function ProductsContextProvider({ children }: ProductsProvider) {
     try {
       setIsLoadingProducts(true);
       const response = await api.get(
-        query ? `/products/?&query=${query}` : `/products/`
+        query ? `products/?&query=${query}` : `products`
       );
       setProducts(response.data);
     } catch (error) {

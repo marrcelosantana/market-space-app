@@ -1,6 +1,8 @@
 import { StatusBar } from "react-native";
 import { NativeBaseProvider } from "native-base";
 
+import "react-native-gesture-handler";
+
 import {
   useFonts,
   Karla_400Regular,

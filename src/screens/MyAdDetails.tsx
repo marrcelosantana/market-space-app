@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Dimensions } from "react-native";
 
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import {
@@ -36,6 +36,7 @@ import { useAuth } from "@hooks/useAuth";
 
 import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
+import Carousel from "react-native-reanimated-carousel";
 
 type RouteParams = {
   productId: string;
@@ -54,6 +55,8 @@ export function MyAdDetails() {
 
   const route = useRoute();
   const { productId } = route.params as RouteParams;
+
+  const width = Dimensions.get("window").width;
 
   async function handleChangeStatus() {
     try {
@@ -166,31 +169,44 @@ export function MyAdDetails() {
           <ArrowLeft size={24} color={colors.gray[700]} />
         </Pressable>
 
-        <Pressable onPress={() => navigation.navigate("update")}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("update", { productId: productId })
+          }
+        >
           <PencilSimpleLine size={24} color={colors.gray[700]} />
         </Pressable>
       </HStack>
 
-      {isLoading ? (
+      {product.user === undefined || isLoading ? (
         <Loading />
       ) : (
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          <Image
-            source={
-              product.product_images !== undefined
-                ? {
-                    uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
-                  }
-                : productImg
-            }
-            alt="imagem do produto"
-            w="full"
-            h={72}
-            resizeMode="cover"
-            style={product.is_active === false && { opacity: 0.5 }}
+          <Carousel
+            loop
+            width={width}
+            height={320}
+            autoPlay={product.product_images.length > 1}
+            data={product.product_images}
+            scrollAnimationDuration={3000}
+            renderItem={({ item }) => (
+              <Image
+                w="full"
+                h={72}
+                mb={8}
+                source={{
+                  uri: `${api.defaults.baseURL}/images/${item.path}`,
+                }}
+                alt="Imagem do produto"
+                resizeMode="cover"
+                borderColor="gray.300"
+                borderWidth={1}
+                style={product.is_active === false && { opacity: 0.5 }}
+              />
+            )}
           />
 
           <VStack px={8} mt={4}>

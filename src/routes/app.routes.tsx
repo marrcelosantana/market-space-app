@@ -27,7 +27,7 @@ type AppRoutes = {
 
   create: undefined;
   details: { productId: string };
-  update: undefined;
+  update: { productId: string };
   preview: { adPreview: AdPreviewDTO };
   my_ad_details: { productId: string };
 };

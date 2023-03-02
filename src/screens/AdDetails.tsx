@@ -30,6 +30,8 @@ import { Loading } from "@components/Loading";
 
 import { priceFormatter } from "@utils/formatter";
 import { AppError } from "@utils/AppError";
+import Carousel from "react-native-reanimated-carousel";
+import { Dimensions } from "react-native";
 
 type RouteParams = {
   productId: string;
@@ -45,6 +47,8 @@ export function AdDetails() {
 
   const route = useRoute();
   const { productId } = route.params as RouteParams;
+
+  const width = Dimensions.get("window").width;
 
   async function loadProductData() {
     try {
@@ -75,7 +79,7 @@ export function AdDetails() {
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || product.user === undefined ? (
         <Loading />
       ) : (
         <VStack flex={1}>
@@ -91,28 +95,35 @@ export function AdDetails() {
 
           <ScrollView showsVerticalScrollIndicator={false}>
             <VStack flex={1}>
-              <Image
-                source={
-                  product.product_images && {
-                    uri: `${api.defaults.baseURL}/images/${product.product_images[0].path}`,
-                  }
-                }
-                alt="imagem do produto"
-                width="full"
-                h={72}
-                resizeMode="cover"
-                mb={8}
+              <Carousel
+                loop
+                width={width}
+                height={320}
+                autoPlay={product.product_images.length > 1}
+                data={product.product_images}
+                scrollAnimationDuration={3000}
+                renderItem={({ item }) => (
+                  <Image
+                    w="full"
+                    h={72}
+                    mb={8}
+                    source={{
+                      uri: `${api.defaults.baseURL}/images/${item.path}`,
+                    }}
+                    alt="Imagem do produto"
+                    resizeMode="cover"
+                    borderColor="gray.300"
+                    borderWidth={1}
+                  />
+                )}
               />
 
               <HStack px={8} alignItems="center" mb={4}>
                 <Avatar
                   borderColor="blue.500"
-                  uri={
-                    product.user &&
-                    `${api.defaults.baseURL}/images/${product.user.avatar}`
-                  }
+                  uri={`${api.defaults.baseURL}/images/${product.user.avatar}`}
                 />
-                <Text ml={2}>{product.user && product.user.name}</Text>
+                <Text ml={2}>{product.user.name}</Text>
               </HStack>
 
               <VStack px={8} pb={8}>
