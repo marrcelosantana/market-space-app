@@ -166,7 +166,11 @@ export function Home() {
           data={products}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <AdCard product={item} onPress={() => handleOpenCard(item.id)} />
+            <AdCard
+              product={item}
+              onPress={() => handleOpenCard(item.id)}
+              key={item.id}
+            />
           )}
           numColumns={2}
           showsVerticalScrollIndicator={false}

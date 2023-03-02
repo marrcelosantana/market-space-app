@@ -22,7 +22,6 @@ import {
 } from "native-base";
 
 import { ArrowLeft, PencilSimpleLine } from "phosphor-react-native";
-import productImg from "@assets/no-photo.jpg";
 
 import { PayMethod } from "@components/PayMethod";
 import { AdStatusTag } from "@components/AdStatusTag";
@@ -202,8 +201,6 @@ export function MyAdDetails() {
                 }}
                 alt="Imagem do produto"
                 resizeMode="cover"
-                borderColor="gray.300"
-                borderWidth={1}
                 style={product.is_active === false && { opacity: 0.5 }}
               />
             )}

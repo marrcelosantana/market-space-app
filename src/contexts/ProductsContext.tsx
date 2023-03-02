@@ -8,9 +8,12 @@ import { AppError } from "@utils/AppError";
 export type ProductsDataProps = {
   userProducts: ProductDTO[];
   products: ProductDTO[];
+  productData: ProductDTO;
   isLoadingProducts: boolean;
+
   loadUserProducts: () => Promise<void>;
   loadProducts: (query?: string) => Promise<void>;
+  loadProductData: (productId: string) => Promise<void>;
 };
 
 type ProductsProvider = {
@@ -24,6 +27,7 @@ export const ProductsContext = createContext<ProductsDataProps>(
 export function ProductsContextProvider({ children }: ProductsProvider) {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [userProducts, setUserProducts] = useState<ProductDTO[]>([]);
+  const [productData, setProductData] = useState<ProductDTO>({} as ProductDTO);
   const [isLoadingProducts, setIsLoadingProducts] = useState(false);
 
   const toast = useToast();
@@ -72,6 +76,27 @@ export function ProductsContextProvider({ children }: ProductsProvider) {
     }
   }
 
+  async function loadProductData(productId: string) {
+    try {
+      setIsLoadingProducts(true);
+      const response = await api.get(`/products/${productId}`);
+      setProductData(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsLoadingProducts(false);
+    }
+  }
+
   return (
     <ProductsContext.Provider
       value={{
@@ -80,6 +105,8 @@ export function ProductsContextProvider({ children }: ProductsProvider) {
         isLoadingProducts,
         products,
         loadProducts,
+        productData,
+        loadProductData,
       }}
     >
       {children}

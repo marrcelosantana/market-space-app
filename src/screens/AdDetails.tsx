@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Dimensions } from "react-native";
 
 import {
   useFocusEffect,
@@ -30,8 +31,8 @@ import { Loading } from "@components/Loading";
 
 import { priceFormatter } from "@utils/formatter";
 import { AppError } from "@utils/AppError";
+
 import Carousel from "react-native-reanimated-carousel";
-import { Dimensions } from "react-native";
 
 type RouteParams = {
   productId: string;
@@ -112,8 +113,6 @@ export function AdDetails() {
                     }}
                     alt="Imagem do produto"
                     resizeMode="cover"
-                    borderColor="gray.300"
-                    borderWidth={1}
                   />
                 )}
               />
