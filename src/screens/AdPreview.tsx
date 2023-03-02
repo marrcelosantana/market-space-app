@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Heading,
   HStack,
@@ -18,14 +19,17 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 import { useAuth } from "@hooks/useAuth";
-import { priceFormatter } from "@utils/formatter";
 import { api } from "@services/api";
+
+import { AppError } from "@utils/AppError";
+import { priceFormatter } from "@utils/formatter";
 
 type RouteParams = {
   adPreview: AdPreviewDTO;
 };
 
 export function AdPreview() {
+  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
   const route = useRoute();
@@ -33,6 +37,55 @@ export function AdPreview() {
 
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  async function handlePublishAd() {
+    try {
+      setIsLoading(true);
+      const product = await api.post("/products", {
+        name: adPreview.title,
+        description: adPreview.description,
+        price: parseInt(adPreview.price.replace(/[^0-9]/g, "")),
+        payment_methods: adPreview.payMethods,
+        is_new: adPreview.isNew,
+        accept_trade: adPreview.acceptTrade,
+      });
+
+      const imageData = new FormData();
+
+      adPreview.images.map((image) => {
+        const imageFile = {
+          ...image,
+          name: `${user.name}.${image.name}`,
+        } as any;
+
+        imageData.append("images", imageFile);
+      });
+
+      imageData.append("product_id", product.data.id);
+
+      await api.post("products/images", imageData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      navigation.navigate("my_ad_details", { productId: product.data.id });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+
+      const title = isAppError
+        ? error.message
+        : "Não foi possivel criar o anúncio.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <VStack flex={1}>
@@ -135,7 +188,8 @@ export function AdPreview() {
           textColor="white"
           iconName="tag"
           iconColor="white"
-          onPress={() => navigation.navigate("my_ad_details")}
+          onPress={handlePublishAd}
+          isLoading={isLoading}
         />
       </HStack>
     </VStack>

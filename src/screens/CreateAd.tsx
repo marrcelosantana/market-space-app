@@ -72,6 +72,11 @@ export function CreateAd() {
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(createAdSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      price: "",
+    },
   });
 
   async function handleSelectImage() {
@@ -109,7 +114,7 @@ export function CreateAd() {
         name: `${fileExtension}`.toLowerCase(),
         uri: imageSelected.assets[0].uri,
         type: `${imageSelected.assets[0].type}/${fileExtension}`,
-      } as any;
+      } as ImageProps;
 
       setImages((images) => {
         return [...images, imageFile];
