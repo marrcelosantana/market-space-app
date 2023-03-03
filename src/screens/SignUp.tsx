@@ -97,9 +97,9 @@ export function SignUp() {
         photoSelected.assets[0].uri
       );
 
-      if (photoInfo.size && photoInfo.size / 1024 / 1024 > 5) {
+      if (photoInfo.size && photoInfo.size / 1024 / 1024 > 8) {
         return toast.show({
-          title: "Essa imagem é muito grande. Escolha uma de até 5MB.",
+          title: "Essa imagem é muito grande. Escolha uma de até 8MB.",
           placement: "top",
           bgColor: "red.500",
         });

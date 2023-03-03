@@ -20,7 +20,7 @@ let failedQueue: Array<PromiseType> = [];
 let isRefreshing = false;
 
 const api = axios.create({
-  baseURL: "http://192.168.1.19:3333",
+  baseURL: "http://192.168.1.15:3333",
 }) as ApiInstaceProps;
 
 api.registerInterceptTokenManager = (signOut) => {

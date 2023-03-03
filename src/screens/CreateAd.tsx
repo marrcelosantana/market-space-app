@@ -26,10 +26,7 @@ import { ButtonMD } from "@components/ButtonMD";
 
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Controller, useForm } from "react-hook-form";
-import { AppError } from "@utils/AppError";
+
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 
 export type ImageProps = {
@@ -130,11 +127,11 @@ export function CreateAd() {
     initValues();
   }
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     initValues();
-  //   }, [])
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      initValues();
+    }, [])
+  );
 
   return (
     <VStack flex={1}>
