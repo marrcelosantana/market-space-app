@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   VStack,
   Image,
@@ -10,13 +10,16 @@ import {
   useToast,
 } from "native-base";
 
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 import logoImg from "@assets/logo.png";
 
 import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
+
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useForm, Controller } from "react-hook-form";
 import { useAuth } from "@hooks/useAuth";
@@ -26,6 +29,14 @@ type FormData = {
   email: string;
   password: string;
 };
+
+const signInSchema = yup.object({
+  email: yup.string().required("Informe o email.").email("Email inválido."),
+  password: yup
+    .string()
+    .required("Informe a senha.")
+    .min(6, "A senha deve conter pelo menos 6 dígitos."),
+});
 
 export function SignIn() {
   const { signIn } = useAuth();
@@ -38,8 +49,21 @@ export function SignIn() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
-  } = useForm<FormData>({});
+  } = useForm<FormData>({
+    resolver: yupResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      reset({});
+    }, [])
+  );
 
   async function handleSignIn({ email, password }: FormData) {
     try {
@@ -81,7 +105,6 @@ export function SignIn() {
           <Controller
             control={control}
             name="email"
-            rules={{ required: "Informe o email." }}
             render={({ field: { onChange, value } }) => (
               <Input
                 placeholder="Email"
@@ -98,7 +121,6 @@ export function SignIn() {
             <Controller
               control={control}
               name="password"
-              rules={{ required: "Informe a senha." }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Senha"
