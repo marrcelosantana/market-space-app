@@ -19,7 +19,7 @@ export function FormAdHeader({ title, handleGoBack }: Props) {
       py={5}
     >
       <Pressable onPress={handleGoBack}>
-        <ArrowLeft size={24} color={colors[700]} />
+        <ArrowLeft size={24} color={colors.gray[700]} />
       </Pressable>
       <Heading fontSize="lg" fontFamily="heading" mr={4}>
         {title}

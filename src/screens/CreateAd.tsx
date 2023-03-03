@@ -320,10 +320,7 @@ export function CreateAd() {
         alignItems="center"
         justifyContent="space-between"
       >
-        <ButtonMD
-          title="Cancelar"
-          onPress={() => navigation.navigate("home")}
-        />
+        <ButtonMD title="Cancelar" onPress={() => navigation.goBack()} />
         <ButtonMD
           title="Avançar"
           bgColor="gray.700"

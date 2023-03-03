@@ -3,10 +3,10 @@ import { TouchableOpacity } from "react-native";
 import { Heading, HStack, VStack, Text, useTheme } from "native-base";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import { ArrowRight, Tag } from "phosphor-react-native";
 import { useProducts } from "@hooks/useProducts";
+import { TabNavigatorRoutesProps } from "@routes/tab.routes";
 
 export function Highlight() {
   const { userProducts, loadUserProducts } = useProducts();
@@ -31,7 +31,7 @@ export function Highlight() {
     findActiveProducts();
   }, [userProducts]);
 
-  const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const navigation = useNavigation<TabNavigatorRoutesProps>();
 
   return (
     <HStack

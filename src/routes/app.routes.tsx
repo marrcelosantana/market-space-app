@@ -1,30 +1,19 @@
-import { useEffect } from "react";
-import { useTheme } from "native-base";
-import { Platform } from "react-native";
-
 import {
-  createBottomTabNavigator,
-  BottomTabNavigationProp,
-} from "@react-navigation/bottom-tabs";
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
 
 import { AdDetails } from "@screens/AdDetails";
 import { CreateAd } from "@screens/CreateAd";
-import { Home } from "@screens/Home";
-import { MyAds } from "@screens/MyAds";
 import { UpdateAd } from "@screens/UpdateAd";
 import { AdPreview } from "@screens/AdPreview";
 import { MyAdDetails } from "@screens/MyAdDetails";
 
-import { House, SignOut, Tag } from "phosphor-react-native";
-import { Loading } from "@components/Loading";
-import { useAuth } from "@hooks/useAuth";
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
+import { TabRoutes } from "./tab.routes";
 
 type AppRoutes = {
-  home: undefined;
-  myAds: undefined;
-  signOut: undefined;
-
+  tabs: undefined;
   create: undefined;
   details: { productId: string };
   update: { productId: string };
@@ -32,93 +21,23 @@ type AppRoutes = {
   my_ad_details: { productId: string };
 };
 
-export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+export type AppNavigatorRoutesProps = StackNavigationProp<AppRoutes>;
 
-const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
+const { Navigator, Screen } = createStackNavigator<AppRoutes>();
 
 export function AppRoutes() {
-  const { colors, sizes } = useTheme();
-
   return (
     <Navigator
       screenOptions={{
         headerShown: false,
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: colors.gray[700],
-        tabBarInactiveTintColor: colors.gray[400],
-        tabBarStyle: {
-          backgroundColor: colors.white,
-          borderTopWidth: 0,
-          height: Platform.OS === "android" ? "auto" : 80,
-          paddingBottom: sizes[10],
-          paddingTop: sizes[6],
-        },
       }}
     >
-      <Screen
-        name="home"
-        component={Home}
-        options={{
-          tabBarIcon: ({ color }) => <House size={24} color={color} />,
-        }}
-      />
-
-      <Screen
-        name="myAds"
-        component={MyAds}
-        options={{
-          tabBarIcon: ({ color }) => <Tag size={24} color={color} />,
-        }}
-      />
-
-      <Screen
-        name="signOut"
-        component={() => {
-          const { signOut } = useAuth();
-
-          async function handleSignOut() {
-            await signOut();
-          }
-
-          useEffect(() => {
-            handleSignOut();
-          }, []);
-          return <Loading />;
-        }}
-        options={{
-          tabBarIcon: () => <SignOut size={24} color="#E07878" />,
-        }}
-      />
-
-      <Screen
-        name="details"
-        component={AdDetails}
-        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
-      />
-
-      <Screen
-        name="create"
-        component={CreateAd}
-        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
-      />
-
-      <Screen
-        name="update"
-        component={UpdateAd}
-        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
-      />
-
-      <Screen
-        name="preview"
-        component={AdPreview}
-        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
-      />
-
-      <Screen
-        name="my_ad_details"
-        component={MyAdDetails}
-        options={{ tabBarButton: () => null, tabBarStyle: { display: "none" } }}
-      />
+      <Screen name="tabs" component={TabRoutes} />
+      <Screen name="details" component={AdDetails} />
+      <Screen name="create" component={CreateAd} />
+      <Screen name="update" component={UpdateAd} />
+      <Screen name="preview" component={AdPreview} />
+      <Screen name="my_ad_details" component={MyAdDetails} />
     </Navigator>
   );
 }

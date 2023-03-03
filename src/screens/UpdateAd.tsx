@@ -158,7 +158,7 @@ export function UpdateAd() {
     <VStack flex={1}>
       <FormAdHeader
         title="Editar anúncio"
-        handleGoBack={() => navigation.navigate("myAds")}
+        handleGoBack={() => navigation.goBack()}
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
@@ -341,10 +341,7 @@ export function UpdateAd() {
         alignItems="center"
         justifyContent="space-between"
       >
-        <ButtonMD
-          title="Cancelar"
-          onPress={() => navigation.navigate("home")}
-        />
+        <ButtonMD title="Cancelar" onPress={() => navigation.goBack()} />
         <ButtonMD
           title="Avançar"
           bgColor="gray.700"

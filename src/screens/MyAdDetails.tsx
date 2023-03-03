@@ -104,7 +104,7 @@ export function MyAdDetails() {
         bgColor: "green.500",
       });
 
-      navigation.navigate("myAds");
+      navigation.goBack();
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -164,7 +164,7 @@ export function MyAdDetails() {
         pb={4}
         px={8}
       >
-        <Pressable onPress={() => navigation.navigate("myAds")}>
+        <Pressable onPress={() => navigation.goBack()}>
           <ArrowLeft size={24} color={colors.gray[700]} />
         </Pressable>
 
