@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { StatusBar, LogBox } from "react-native";
 import { NativeBaseProvider } from "native-base";
 
 import "react-native-gesture-handler";
@@ -17,10 +17,14 @@ import { AuthContextProvider } from "@contexts/AuthContext";
 import { ProductsContextProvider } from "@contexts/ProductsContext";
 
 export default function App() {
-  const [fontsLoaded, setFontsLoaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     Karla_400Regular,
     Karla_700Bold,
   });
+
+  LogBox.ignoreLogs([
+    "We can not support a function callback. See Github Issues for details https://github.com/adobe/react-spectrum/issues/2320",
+  ]);
 
   return (
     <NativeBaseProvider theme={THEME}>
