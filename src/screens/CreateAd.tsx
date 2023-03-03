@@ -124,12 +124,12 @@ export function CreateAd() {
     }
 
     navigation.navigate("preview", { adPreview });
-    initValues();
+    // initValues();
   }
 
   useFocusEffect(
     useCallback(() => {
-      initValues();
+      // initValues();
     }, [])
   );
 

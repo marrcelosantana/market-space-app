@@ -137,7 +137,7 @@ export function AdDetails() {
                     {product.name}
                   </Heading>
                   <Heading fontFamily="heading" fontSize="lg" color="blue.500">
-                    {priceFormatter.format(product.price / 100)}
+                    {priceFormatter.format(product.price)}
                   </Heading>
                 </HStack>
 
@@ -199,7 +199,7 @@ export function AdDetails() {
               numberOfLines={1}
               overflow="hidden"
             >
-              {priceFormatter.format(product.price / 100)}
+              {priceFormatter.format(product.price)}
             </Heading>
 
             <Pressable bgColor="blue.500" rounded={6}>

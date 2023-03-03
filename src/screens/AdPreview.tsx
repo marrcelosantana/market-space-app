@@ -23,6 +23,8 @@ import { api } from "@services/api";
 
 import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
+import { Dimensions } from "react-native";
+import Carousel from "react-native-reanimated-carousel";
 
 type RouteParams = {
   adPreview: AdPreviewDTO;
@@ -37,6 +39,8 @@ export function AdPreview() {
 
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+
+  const width = Dimensions.get("window").width;
 
   async function handlePublishAd() {
     try {
@@ -105,14 +109,26 @@ export function AdPreview() {
         contentContainerStyle={{ flexGrow: 1 }}
         showsVerticalScrollIndicator={false}
       >
-        <Image
-          source={{ uri: adPreview.images[0].uri }}
-          alt="produto"
-          w="full"
-          h="280px"
-          resizeMode="cover"
+        <Carousel
+          loop
+          width={width}
+          height={320}
+          autoPlay={adPreview.images.length > 1}
+          data={adPreview.images}
+          scrollAnimationDuration={3000}
+          renderItem={({ item }) => (
+            <Image
+              w="full"
+              h="280px"
+              mb={8}
+              source={{
+                uri: item.uri,
+              }}
+              alt="Imagem do produto"
+              resizeMode="cover"
+            />
+          )}
         />
-
         <VStack px={8} mt={4} pb={8}>
           <HStack alignItems="center">
             <Avatar

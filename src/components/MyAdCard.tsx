@@ -71,7 +71,7 @@ export function MyAdCard({ product, ...rest }: Props) {
             {product.name}
           </Text>
           <Heading fontFamily="heading" color="gray.700" fontSize="xs">
-            {priceFormatter.format(product.price / 100)}
+            {priceFormatter.format(product.price)}
           </Heading>
         </VStack>
       </VStack>

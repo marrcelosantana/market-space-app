@@ -240,7 +240,7 @@ export function MyAdDetails() {
                   {product.name}
                 </Heading>
                 <Heading fontSize="lg" fontFamily="heading" color="blue.500">
-                  {priceFormatter.format(product.price / 100)}
+                  {priceFormatter.format(product.price)}
                 </Heading>
               </HStack>
 
