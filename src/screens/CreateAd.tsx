@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { useCallback, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import {
@@ -32,32 +32,16 @@ import { Controller, useForm } from "react-hook-form";
 import { AppError } from "@utils/AppError";
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 
-type FormData = {
-  title: string;
-  description: string;
-  price: string;
-};
-
 export type ImageProps = {
   name: string;
   uri: string;
   type: string;
 };
 
-const createAdSchema = yup.object({
-  title: yup
-    .string()
-    .required("Informe o título")
-    .min(3, "É necessário pelo menos 3 caracteres.")
-    .max(15, "Título muito extenso. O máximo é de 15 caracteres."),
-  description: yup
-    .string()
-    .required("Informe a descrição.")
-    .min(3, "É necessário pelo menos 3 caracteres."),
-  price: yup.string().required("Informe o preço."),
-});
-
 export function CreateAd() {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
   const [isNew, setIsNew] = useState(true);
   const [payMethods, setPayMethods] = useState<string[]>([]);
   const [acceptTrade, setAcceptTrade] = useState(false);
@@ -65,19 +49,6 @@ export function CreateAd() {
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const toast = useToast();
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: yupResolver(createAdSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: "",
-    },
-  });
 
   async function handleSelectImage() {
     const imageSelected = await ImagePicker.launchImageLibraryAsync({
@@ -89,10 +60,6 @@ export function CreateAd() {
 
     if (imageSelected.canceled) {
       return;
-    }
-
-    if (images.length > 2) {
-      throw new AppError("O limite para fotos selecionadas é 3.");
     }
 
     if (imageSelected.assets[0].uri) {
@@ -116,9 +83,7 @@ export function CreateAd() {
         type: `${imageSelected.assets[0].type}/${fileExtension}`,
       } as ImageProps;
 
-      setImages((images) => {
-        return [...images, imageFile];
-      });
+      setImages([...images, imageFile]);
     }
   }
 
@@ -127,7 +92,15 @@ export function CreateAd() {
     setImages(imagesFiltered);
   }
 
-  function handleAdvance({ title, description, price }: FormData) {
+  function initValues() {
+    setTitle("");
+    setDescription("");
+    setPrice("");
+    setPayMethods([]);
+    setImages([]);
+  }
+
+  function handleAdvance() {
     const adPreview: AdPreviewDTO = {
       title,
       description,
@@ -138,24 +111,30 @@ export function CreateAd() {
       payMethods,
     };
 
-    if (images.length === 0) {
+    if (
+      title.length === 0 ||
+      description.length === 0 ||
+      price.length === 0 ||
+      images.length === 0 ||
+      payMethods.length === 0
+    ) {
       return toast.show({
-        title: "Selecione pelo menos uma imagem.",
-        placement: "top",
-        bgColor: "red.500",
-      });
-    }
-
-    if (payMethods.length === 0) {
-      return toast.show({
-        title: "Selecione pelo menos uma forma de pagamento.",
+        title:
+          "Você esqueceu de preencher algum campo ou de escolher uma imagem.",
         placement: "top",
         bgColor: "red.500",
       });
     }
 
     navigation.navigate("preview", { adPreview });
+    initValues();
   }
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     initValues();
+  //   }, [])
+  // );
 
   return (
     <VStack flex={1}>
@@ -218,31 +197,18 @@ export function CreateAd() {
               Sobre o produto
             </Heading>
 
-            <Controller
-              name="title"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <Input
-                  placeholder="Título do anúncio"
-                  rounded={6}
-                  onChangeText={onChange}
-                  value={value}
-                  errorMessage={errors.title?.message}
-                />
-              )}
+            <Input
+              placeholder="Título do anúncio"
+              rounded={6}
+              onChangeText={(value) => setTitle(value)}
+              value={title}
             />
 
-            <Controller
-              name="description"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <TextArea
-                  placeholder="Descrição do produto"
-                  mb={4}
-                  onChangeText={onChange}
-                  value={value}
-                />
-              )}
+            <TextArea
+              placeholder="Descrição do produto"
+              mb={4}
+              onChangeText={(value) => setDescription(value)}
+              value={description}
             />
 
             <Radio.Group
@@ -278,22 +244,15 @@ export function CreateAd() {
             </Heading>
 
             <HStack>
-              <Controller
-                name="price"
-                control={control}
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    placeholder="Valor do produto"
-                    keyboardType="numeric"
-                    w="full"
-                    position="relative"
-                    pl={10}
-                    rounded={6}
-                    onChangeText={onChange}
-                    value={value}
-                    errorMessage={errors.price?.message}
-                  />
-                )}
+              <Input
+                placeholder="Valor do produto"
+                keyboardType="numeric"
+                w="full"
+                position="relative"
+                pl={10}
+                rounded={6}
+                onChangeText={(value) => setPrice(value)}
+                value={price}
               />
 
               <Text
@@ -372,7 +331,7 @@ export function CreateAd() {
           title="Avançar"
           bgColor="gray.700"
           textColor="white"
-          onPress={handleSubmit(handleAdvance)}
+          onPress={handleAdvance}
         />
       </HStack>
     </VStack>

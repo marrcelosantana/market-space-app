@@ -160,8 +160,8 @@ export function UpdateAd() {
   return (
     <VStack flex={1}>
       <FormAdHeader
-        title="Criar anúncio"
-        handleGoBack={() => navigation.goBack()}
+        title="Editar anúncio"
+        handleGoBack={() => navigation.navigate("myAds")}
       />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
