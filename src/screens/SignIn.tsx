@@ -8,12 +8,15 @@ import {
   Center,
   HStack,
   useToast,
+  useTheme,
+  Pressable,
 } from "native-base";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 
 import logoImg from "@assets/logo.png";
+import { Eye, EyeSlash } from "phosphor-react-native";
 
 import { Input } from "@components/Input";
 import { ButtonLG } from "@components/ButtonLG";
@@ -44,6 +47,7 @@ export function SignIn() {
   const [showPassword, setShowPassword] = useState(true);
 
   const toast = useToast();
+  const { colors } = useTheme();
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
 
   const {
@@ -80,6 +84,8 @@ export function SignIn() {
         placement: "top",
         bgColor: "red.500",
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -129,9 +135,25 @@ export function SignIn() {
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.password?.message}
-                  isPasswordInput
-                  showPassword={showPassword}
-                  setShowpassword={setShowPassword}
+                  onSubmitEditing={handleSubmit(handleSignIn)}
+                  returnKeyType="send"
+                  rightElement={
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Eye
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      ) : (
+                        <EyeSlash
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      )}
+                    </Pressable>
+                  }
                 />
               )}
             />

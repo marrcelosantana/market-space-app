@@ -7,6 +7,8 @@ import {
   Heading,
   Center,
   useToast,
+  Pressable,
+  useTheme,
 } from "native-base";
 
 import { useForm, Controller } from "react-hook-form";
@@ -28,6 +30,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
 import { useAuth } from "@hooks/useAuth";
+import { Eye, EyeSlash } from "phosphor-react-native";
 
 type UserPhotoProps = {
   photo: {
@@ -66,9 +69,12 @@ const signUpSchema = yup.object({
 export function SignUp() {
   const [userPhoto, setUserPhoto] = useState({} as UserPhotoProps);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const navigation = useNavigation<AuthNavigatorRoutesProps>();
   const toast = useToast();
+  const { colors } = useTheme();
 
   const { signIn } = useAuth();
 
@@ -245,12 +251,29 @@ export function SignUp() {
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Senha"
-                  secureTextEntry
+                  secureTextEntry={showPassword}
                   flex={1}
                   onChangeText={onChange}
                   value={value}
                   errorMessage={errors.password?.message}
                   rounded={6}
+                  rightElement={
+                    <Pressable onPress={() => setShowPassword(!showPassword)}>
+                      {showPassword ? (
+                        <Eye
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      ) : (
+                        <EyeSlash
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      )}
+                    </Pressable>
+                  }
                 />
               )}
             />
@@ -261,7 +284,7 @@ export function SignUp() {
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Confirmar senha"
-                  secureTextEntry
+                  secureTextEntry={showConfirmPassword}
                   flex={1}
                   onChangeText={onChange}
                   value={value}
@@ -269,6 +292,27 @@ export function SignUp() {
                   returnKeyType="send"
                   errorMessage={errors.password_confirm?.message}
                   rounded={6}
+                  rightElement={
+                    <Pressable
+                      onPress={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                    >
+                      {showConfirmPassword ? (
+                        <Eye
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      ) : (
+                        <EyeSlash
+                          size={24}
+                          color={colors.gray[400]}
+                          style={{ marginRight: 10 }}
+                        />
+                      )}
+                    </Pressable>
+                  }
                 />
               )}
             />

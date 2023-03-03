@@ -6,7 +6,6 @@ import {
   Center,
   FlatList,
   HStack,
-  Input,
   Pressable,
   Text,
   useTheme,
@@ -21,6 +20,7 @@ import { Highlight } from "@components/Highlight";
 import { HomeHeader } from "@components/HomeHeader";
 import { FilterModal } from "@components/FilterModal";
 import { Loading } from "@components/Loading";
+import { Input } from "@components/Input";
 
 import {
   ArrowClockwise,
@@ -107,56 +107,50 @@ export function Home() {
       </Text>
 
       <HStack>
-        <Pressable
-          alignItems="center"
-          justifyContent="center"
-          bgColor="gray.100"
-          h={45}
-          px={2}
-          onPress={handleRefresh}
-        >
-          <ArrowClockwise size={20} color={colors.gray[600]} />
-        </Pressable>
-
         <Input
           onChangeText={(search) => setSearch(search)}
+          px={0}
           value={search}
           placeholder="Buscar um anúncio"
-          flex={1}
-          h={45}
-          mb={2}
-          fontSize="md"
-          rounded={0}
-          bgColor="gray.100"
-          borderWidth={0}
-          color="gray.600"
-          fontFamily="body"
-          placeholderTextColor="gray.400"
-          _focus={{ borderWidth: "1px", borderColor: "blue.500" }}
+          leftElement={
+            <Pressable
+              alignItems="center"
+              justifyContent="center"
+              bgColor="gray.100"
+              h={45}
+              px={2}
+              onPress={handleRefresh}
+            >
+              <ArrowClockwise size={20} color={colors.gray[600]} />
+            </Pressable>
+          }
+          rightElement={
+            <HStack>
+              <Pressable
+                alignItems="center"
+                justifyContent="center"
+                bgColor="gray.100"
+                h={45}
+                px={2}
+                onPress={() => handleSearch(search)}
+                disabled={search.length === 0}
+              >
+                <MagnifyingGlass size={20} color={colors.gray[600]} />
+              </Pressable>
+
+              <Pressable
+                alignItems="center"
+                justifyContent="center"
+                bgColor="gray.100"
+                h={45}
+                px={2}
+                onPress={() => setModalVisible(true)}
+              >
+                <Sliders size={20} color={colors.gray[600]} />
+              </Pressable>
+            </HStack>
+          }
         />
-
-        <Pressable
-          alignItems="center"
-          justifyContent="center"
-          bgColor="gray.100"
-          h={45}
-          px={2}
-          onPress={() => handleSearch(search)}
-          disabled={search.length === 0}
-        >
-          <MagnifyingGlass size={20} color={colors.gray[600]} />
-        </Pressable>
-
-        <Pressable
-          alignItems="center"
-          justifyContent="center"
-          bgColor="gray.100"
-          h={45}
-          px={2}
-          onPress={() => setModalVisible(true)}
-        >
-          <Sliders size={20} color={colors.gray[600]} />
-        </Pressable>
       </HStack>
 
       {isLoadingProducts ? (
