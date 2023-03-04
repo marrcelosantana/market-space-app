@@ -7,7 +7,6 @@ import {
   Checkbox,
   Heading,
   HStack,
-  Image,
   Radio,
   ScrollView,
   Switch,

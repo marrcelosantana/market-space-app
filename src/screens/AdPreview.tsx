@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Dimensions } from "react-native";
 import {
   Heading,
   HStack,
@@ -8,6 +9,9 @@ import {
   useToast,
   VStack,
 } from "native-base";
+
+import { TabNavigatorRoutesProps } from "@routes/tab.routes";
+import Carousel from "react-native-reanimated-carousel";
 
 import { Avatar } from "@components/Avatar";
 import { AdStatusTag } from "@components/AdStatusTag";
@@ -19,14 +23,11 @@ import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 import { useAuth } from "@hooks/useAuth";
+import { useProducts } from "@hooks/useProducts";
 import { api } from "@services/api";
 
 import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
-import { Dimensions } from "react-native";
-import Carousel from "react-native-reanimated-carousel";
-import { useProducts } from "@hooks/useProducts";
-import { TabNavigatorRoutesProps } from "@routes/tab.routes";
 
 type RouteParams = {
   adPreview: AdPreviewDTO;

@@ -1,6 +1,7 @@
 import { Center, HStack, Image, Pressable } from "native-base";
-import avatarImg from "@assets/avatar.png";
 import { PencilSimpleLine } from "phosphor-react-native";
+
+import avatarImg from "@assets/avatar.png";
 
 type Props = {
   userPhoto: string;
