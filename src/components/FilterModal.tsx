@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Checkbox,
   HStack,
@@ -13,21 +12,31 @@ import { ButtonMD } from "@components/ButtonMD";
 
 type Props = {
   modalVisible: boolean;
+  isNew: boolean;
+  acceptTrade: boolean;
+  payMethods: string[];
+
   setModalVisible: (bool: boolean) => void;
+  setIsNew: (bool: boolean) => void;
+  setAcceptTrade: (bool: boolean) => void;
+  setPayMethods: (str: string[]) => void;
+
+  applyFilters: () => Promise<void>;
+  resetFilters: () => Promise<void>;
 };
 
-export function FilterModal({ modalVisible, setModalVisible }: Props) {
-  const [groupValues, setGroupValues] = useState([]);
-  const [isNew, setIsNew] = useState(true);
-  const [acceptTrade, setAcceptTrade] = useState(true);
-  const [payMethods, setPayMethods] = useState<string[]>([
-    "cash",
-    "pix",
-    "card",
-    "boleto",
-    "deposit",
-  ]);
-
+export function FilterModal({
+  modalVisible,
+  isNew,
+  acceptTrade,
+  payMethods,
+  setModalVisible,
+  setIsNew,
+  setAcceptTrade,
+  setPayMethods,
+  applyFilters,
+  resetFilters,
+}: Props) {
   return (
     <>
       <Modal
@@ -51,14 +60,24 @@ export function FilterModal({ modalVisible, setModalVisible }: Props) {
                 Condição
               </Text>
 
-              <Radio.Group name="condition" colorScheme="gray">
+              <Radio.Group
+                name="radio"
+                accessibilityLabel="tipo de produto"
+                value={isNew ? "new" : "used"}
+                onChange={(nextValue) => {
+                  setIsNew(nextValue === "new" ? true : false);
+                }}
+              >
                 <HStack>
-                  <Radio value="new" size="sm">
-                    <Text>Novo</Text>
+                  <Radio value="new" colorScheme="gray">
+                    <Text fontSize="md" color="gray.600" mr={2}>
+                      Produto novo
+                    </Text>
                   </Radio>
-
-                  <Radio value="used" size="sm" ml={4}>
-                    <Text>Usado</Text>
+                  <Radio value="used" colorScheme="gray">
+                    <Text fontSize="md" color="gray.600">
+                      Produto usado
+                    </Text>
                   </Radio>
                 </HStack>
               </Radio.Group>
@@ -74,6 +93,8 @@ export function FilterModal({ modalVisible, setModalVisible }: Props) {
                 onTrackColor="indigo.200"
                 onThumbColor="indigo.500"
                 offThumbColor="indigo.50"
+                onToggle={(value) => setAcceptTrade(value)}
+                value={acceptTrade}
               />
             </VStack>
 
@@ -82,31 +103,32 @@ export function FilterModal({ modalVisible, setModalVisible }: Props) {
                 Métodos de pagamento aceitos
               </Text>
 
-              <Checkbox.Group onChange={setGroupValues} value={groupValues}>
-                <Checkbox value="ticket" my={1} colorScheme="gray">
+              <Checkbox.Group onChange={setPayMethods} value={payMethods}>
+                <Checkbox value="boleto" my={1} colorScheme="gray">
                   <Text>Boleto</Text>
                 </Checkbox>
                 <Checkbox value="pix" my={1} colorScheme="gray">
                   <Text>Pix</Text>
                 </Checkbox>
-                <Checkbox value="money" my={1} colorScheme="gray">
+                <Checkbox value="cash" my={1} colorScheme="gray">
                   <Text>Dinheiro</Text>
                 </Checkbox>
-                <Checkbox value="credit-card" my={1} colorScheme="gray">
+                <Checkbox value="card" my={1} colorScheme="gray">
                   <Text>Cartão de Crédito</Text>
                 </Checkbox>
-                <Checkbox value="deposit" my={1}>
+                <Checkbox value="deposit" my={1} colorScheme="gray">
                   <Text>Depósito Bancário</Text>
                 </Checkbox>
               </Checkbox.Group>
             </VStack>
 
             <HStack mb={6} alignItems="center" justifyContent="space-around">
-              <ButtonMD title="Resetar Filtros" />
+              <ButtonMD title="Resetar Filtros" onPress={resetFilters} />
               <ButtonMD
                 title="Aplicar Filtros"
                 bgColor="gray.700"
                 textColor="gray.100"
+                onPress={applyFilters}
               />
             </HStack>
           </Modal.Body>

@@ -32,12 +32,17 @@ import {
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { AppError } from "@utils/AppError";
 import { useProducts } from "@hooks/useProducts";
+import { api } from "@services/api";
 
 export function Home() {
+  const { products, loadProducts, isLoadingProducts, setProducts } =
+    useProducts();
+
   const [modalVisible, setModalVisible] = useState(false);
   const [search, setSearch] = useState("");
-
-  const { products, loadProducts, isLoadingProducts } = useProducts();
+  const [isNew, setIsNew] = useState(true);
+  const [acceptTrade, setAcceptTrade] = useState(false);
+  const [payMethods, setPayMethods] = useState<string[]>([]);
 
   const { colors } = useTheme();
   const toast = useToast();
@@ -70,6 +75,52 @@ export function Home() {
       await loadProducts();
       setSearch("");
       Keyboard.dismiss();
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
+  }
+
+  async function applyFilters() {
+    try {
+      setModalVisible(false);
+      const params = {
+        is_new: isNew,
+        accept_trade: acceptTrade,
+        payment_methods: payMethods,
+      };
+
+      const response = await api.get("/products", { params });
+      setProducts(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    }
+  }
+
+  async function resetFilters() {
+    try {
+      setIsNew(true);
+      setAcceptTrade(true);
+      setPayMethods([]);
+
+      await loadProducts();
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -183,6 +234,14 @@ export function Home() {
       <FilterModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
+        isNew={isNew}
+        setIsNew={setIsNew}
+        acceptTrade={acceptTrade}
+        setAcceptTrade={setAcceptTrade}
+        payMethods={payMethods}
+        setPayMethods={setPayMethods}
+        applyFilters={applyFilters}
+        resetFilters={resetFilters}
       />
     </VStack>
   );

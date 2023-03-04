@@ -26,6 +26,7 @@ export type ProductsDataProps = {
     deletedImages: string[],
     oldImages: ProductImageDTO[]
   ) => Promise<void>;
+  setProducts: (product: ProductDTO[]) => void;
 };
 
 type ProductsProvider = {
@@ -246,6 +247,7 @@ export function ProductsContextProvider({ children }: ProductsProvider) {
         createAd,
         uploadImages,
         updateAd,
+        setProducts,
       }}
     >
       {children}
