@@ -169,9 +169,7 @@ export function MyAdDetails() {
         </Pressable>
 
         <Pressable
-          onPress={() =>
-            navigation.navigate("update", { productId: productId })
-          }
+          onPress={() => navigation.navigate("update", { product: product })}
         >
           <PencilSimpleLine size={24} color={colors.gray[700]} />
         </Pressable>

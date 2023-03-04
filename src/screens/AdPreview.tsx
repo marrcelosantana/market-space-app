@@ -25,58 +25,43 @@ import { AppError } from "@utils/AppError";
 import { priceFormatter } from "@utils/formatter";
 import { Dimensions } from "react-native";
 import Carousel from "react-native-reanimated-carousel";
+import { useProducts } from "@hooks/useProducts";
+import { TabNavigatorRoutesProps } from "@routes/tab.routes";
 
 type RouteParams = {
   adPreview: AdPreviewDTO;
 };
 
 export function AdPreview() {
-  const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
+  const { createAd } = useProducts();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const route = useRoute();
   const { adPreview } = route.params as RouteParams;
 
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const navigation2 = useNavigation<TabNavigatorRoutesProps>();
 
   const width = Dimensions.get("window").width;
 
   async function handlePublishAd() {
     try {
       setIsLoading(true);
-      const product = await api.post("/products", {
-        name: adPreview.title,
-        description: adPreview.description,
-        price: parseInt(adPreview.price.replace(/[^0-9]/g, "")),
-        payment_methods: adPreview.payMethods,
-        is_new: adPreview.isNew,
-        accept_trade: adPreview.acceptTrade,
+
+      await createAd(adPreview);
+
+      toast.show({
+        title: "Anúncio criado com sucesso!",
+        placement: "top",
+        bgColor: "green.500",
       });
 
-      const imageData = new FormData();
-
-      adPreview.images.map((image) => {
-        const imageFile = {
-          ...image,
-          name: `${user.name}.${image.name}`,
-        } as any;
-
-        imageData.append("images", imageFile);
-      });
-
-      imageData.append("product_id", product.data.id);
-
-      await api.post("products/images", imageData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      navigation.navigate("my_ad_details", { productId: product.data.id });
+      navigation2.navigate("myAds");
     } catch (error) {
       const isAppError = error instanceof AppError;
-
       const title = isAppError
         ? error.message
         : "Não foi possivel criar o anúncio.";
@@ -113,8 +98,8 @@ export function AdPreview() {
           loop
           width={width}
           height={320}
-          autoPlay={adPreview.images.length > 1}
-          data={adPreview.images}
+          autoPlay={adPreview.imagesUri.length > 1}
+          data={adPreview.imagesUri}
           scrollAnimationDuration={3000}
           renderItem={({ item }) => (
             <Image
@@ -122,7 +107,7 @@ export function AdPreview() {
               h="280px"
               mb={8}
               source={{
-                uri: item.uri,
+                uri: item,
               }}
               alt="Imagem do produto"
               resizeMode="cover"
@@ -150,10 +135,10 @@ export function AdPreview() {
                 numberOfLines={1}
                 overflow="hidden"
               >
-                {adPreview.title}
+                {adPreview.name}
               </Heading>
               <Heading fontSize="lg" fontFamily="heading" color="blue.500">
-                {priceFormatter.format(Number(adPreview.price))}
+                {priceFormatter.format(adPreview.price)}
               </Heading>
             </HStack>
 
@@ -165,7 +150,7 @@ export function AdPreview() {
               <Text fontFamily="heading" mr={2}>
                 Aceita troca?
               </Text>
-              {adPreview.acceptTrade === true ? (
+              {adPreview.accept_trade === true ? (
                 <Text>Sim</Text>
               ) : (
                 <Text>Não</Text>
@@ -177,7 +162,7 @@ export function AdPreview() {
                 Método de pagamento
               </Text>
 
-              {adPreview.payMethods.map((item) => (
+              {adPreview.payment_methods.map((item) => (
                 <PayMethod type={item} key={item} />
               ))}
             </VStack>
@@ -196,7 +181,7 @@ export function AdPreview() {
         <ButtonMD
           title="Voltar e editar"
           iconName="arrowleft"
-          onPress={() => navigation.navigate("create")}
+          onPress={() => navigation.goBack()}
         />
         <ButtonMD
           title="Publicar"

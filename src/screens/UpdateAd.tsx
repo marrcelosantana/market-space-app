@@ -1,9 +1,5 @@
-import { useCallback, useState } from "react";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import {
@@ -31,128 +27,106 @@ import { ButtonMD } from "@components/ButtonMD";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 
-import { AdPreviewDTO } from "@models/AdPreviewDTO";
 import { ProductDTO } from "@models/ProductDTO";
+import { ProductImageDTO } from "@models/ProductImageDTO";
+
 import { api } from "@services/api";
+import { useProducts } from "@hooks/useProducts";
+import { AdPreviewDTO } from "@models/AdPreviewDTO";
+import { AppError } from "@utils/AppError";
 
 type RouteParams = {
-  productId: string;
-};
-
-export type ImageProps = {
-  name: string;
-  uri: string;
-  type: string;
+  product: ProductDTO;
 };
 
 export function UpdateAd() {
+  const { updateAd } = useProducts();
+
   const route = useRoute();
-  const { productId } = route.params as RouteParams;
+  const { product } = route.params as RouteParams;
 
-  const [productData, setProductData] = useState<ProductDTO>({} as ProductDTO);
+  const payMethodsKey = product.payment_methods.map(({ key }) => key);
+  const imagesPath = product.product_images.map(({ path }) => path);
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [isNew, setIsNew] = useState(true);
-  const [payMethods, setPayMethods] = useState<string[]>([]);
-  const [acceptTrade, setAcceptTrade] = useState(false);
-  const [images, setImages] = useState<ImageProps[]>([]);
+  const [title, setTitle] = useState(product.name);
+  const [description, setDescription] = useState(product.description);
+  const [price, setPrice] = useState(product.price.toString());
+  const [isNew, setIsNew] = useState(product.is_new);
+  const [payMethods, setPayMethods] = useState(payMethodsKey);
+  const [acceptTrade, setAcceptTrade] = useState(product.accept_trade);
+  const [images, setImages] = useState<ProductImageDTO[]>(
+    product.product_images
+  );
+
+  const [newImages, setNewImages] = useState<string[]>([]);
+  const [deletedImages, setDeletedImages] = useState<string[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const toast = useToast();
 
   async function handleSelectImage() {
-    const imageSelected = await ImagePicker.launchImageLibraryAsync({
+    const ImageSelected = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      aspect: [4, 4],
+      aspect: [4, 3],
       allowsEditing: true,
+      quality: 1,
     });
 
-    if (imageSelected.canceled) {
+    if (ImageSelected.canceled) {
       return;
     }
 
-    if (imageSelected.assets[0].uri) {
-      const imageInfo = await FileSystem.getInfoAsync(
-        imageSelected.assets[0].uri
-      );
-
-      if (imageInfo.size && imageInfo.size / 1024 / 1024 > 8) {
-        return toast.show({
-          title: "Essa imagem é muito grande. Escolha uma de até 8MB.",
-          placement: "top",
-          bgColor: "red.500",
-        });
-      }
-
-      const fileExtension = imageSelected.assets[0].uri.split(".").pop();
-
-      const imageFile = {
-        name: `${fileExtension}`.toLowerCase(),
-        uri: imageSelected.assets[0].uri,
-        type: `${imageSelected.assets[0].type}/${fileExtension}`,
-      } as ImageProps;
-
-      setImages([...images, imageFile]);
+    if (ImageSelected.assets[0].uri) {
+      setNewImages((prevValues) => [
+        ...prevValues,
+        ImageSelected.assets[0].uri,
+      ]);
     }
   }
 
-  function removeImage(uri: string) {
-    const imagesFiltered = images.filter((image) => image.uri !== uri);
+  function removeImage(path: string) {
+    const imagesFiltered = images.filter((image) => image.path !== path);
     setImages(imagesFiltered);
   }
 
-  function initValues() {
-    setTitle("");
-    setDescription("");
-    setPrice("");
-    setPayMethods([]);
-    setImages([]);
-  }
-
-  function handleAdvance() {
-    const adPreview: AdPreviewDTO = {
-      title,
+  async function handleUpdateAd() {
+    const newAd: AdPreviewDTO = {
+      name: title,
       description,
-      price,
-      images,
-      isNew,
-      acceptTrade,
-      payMethods,
+      price: Number(price),
+      is_new: isNew,
+      accept_trade: acceptTrade,
+      payment_methods: payMethods,
+      imagesUri: newImages,
     };
+    try {
+      setIsLoading(true);
+      await updateAd(newAd, product.id, deletedImages, images);
 
-    if (
-      title.length === 0 ||
-      description.length === 0 ||
-      price.length === 0 ||
-      images.length === 0 ||
-      payMethods.length === 0
-    ) {
-      return toast.show({
-        title:
-          "Você esqueceu de preencher algum campo ou de escolher uma imagem.",
+      toast.show({
+        title: "Anúncio atualizado com sucesso!",
+        placement: "top",
+        bgColor: "green.500",
+      });
+
+      navigation.goBack();
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possivel atualizar o anúncio.";
+
+      toast.show({
+        title,
         placement: "top",
         bgColor: "red.500",
       });
+    } finally {
+      setIsLoading(false);
     }
-
-    navigation.navigate("preview", { adPreview });
-    initValues();
   }
-
-  async function loadProductData() {
-    const response = await api.get(`products/${productId}`);
-    setProductData(response.data);
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      loadProductData();
-      console.log({ productData });
-    }, [])
-  );
 
   return (
     <VStack flex={1}>
@@ -178,20 +152,22 @@ export function UpdateAd() {
             <HStack>
               {images.length > 0 &&
                 images.map((image) => (
-                  <Box key={image.uri}>
+                  <Box key={image.id}>
                     <Image
                       w={24}
                       h={24}
                       mr={2}
                       mt={4}
                       borderRadius={8}
-                      source={{ uri: image.uri }}
+                      source={{
+                        uri: `${api.defaults.baseURL}/images/${image.path}`,
+                      }}
                       alt="imagem do produto"
                       resizeMode="cover"
                     />
 
                     <Pressable
-                      onPress={() => removeImage(image.uri)}
+                      onPress={() => removeImage(image.path)}
                       position="absolute"
                       mt={5}
                       ml={1}
@@ -346,7 +322,8 @@ export function UpdateAd() {
           title="Avançar"
           bgColor="gray.700"
           textColor="white"
-          onPress={handleAdvance}
+          onPress={handleUpdateAd}
+          isLoading={isLoading}
         />
       </HStack>
     </VStack>

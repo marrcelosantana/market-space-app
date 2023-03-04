@@ -1,11 +1,9 @@
-import { ImageProps } from "@screens/CreateAd";
-
 export type AdPreviewDTO = {
-  title: string;
+  name: string;
   description: string;
-  price: string;
-  isNew: boolean;
-  acceptTrade: boolean;
-  images: ImageProps[];
-  payMethods: string[];
+  price: number;
+  is_new: boolean;
+  accept_trade: boolean;
+  imagesUri: string[];
+  payment_methods: string[];
 };

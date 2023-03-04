@@ -11,12 +11,13 @@ import { MyAdDetails } from "@screens/MyAdDetails";
 
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 import { TabRoutes } from "./tab.routes";
+import { ProductDTO } from "@models/ProductDTO";
 
 type AppRoutes = {
   tabs: undefined;
   create: undefined;
   details: { productId: string };
-  update: { productId: string };
+  update: { product: ProductDTO };
   preview: { adPreview: AdPreviewDTO };
   my_ad_details: { productId: string };
 };

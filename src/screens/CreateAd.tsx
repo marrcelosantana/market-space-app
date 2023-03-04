@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 
 import {
@@ -25,24 +25,17 @@ import { TextArea } from "@components/TextArea";
 import { ButtonMD } from "@components/ButtonMD";
 
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 
-export type ImageProps = {
-  name: string;
-  uri: string;
-  type: string;
-};
-
 export function CreateAd() {
-  const [title, setTitle] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [isNew, setIsNew] = useState(true);
   const [payMethods, setPayMethods] = useState<string[]>([]);
   const [acceptTrade, setAcceptTrade] = useState(false);
-  const [images, setImages] = useState<ImageProps[]>([]);
+  const [imagesUri, setImagesUri] = useState<string[]>([]);
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
   const toast = useToast();
@@ -60,59 +53,31 @@ export function CreateAd() {
     }
 
     if (imageSelected.assets[0].uri) {
-      const imageInfo = await FileSystem.getInfoAsync(
-        imageSelected.assets[0].uri
-      );
-
-      if (imageInfo.size && imageInfo.size / 1024 / 1024 > 8) {
-        return toast.show({
-          title: "Essa imagem é muito grande. Escolha uma de até 8MB.",
-          placement: "top",
-          bgColor: "red.500",
-        });
-      }
-
-      const fileExtension = imageSelected.assets[0].uri.split(".").pop();
-
-      const imageFile = {
-        name: `${fileExtension}`.toLowerCase(),
-        uri: imageSelected.assets[0].uri,
-        type: `${imageSelected.assets[0].type}/${fileExtension}`,
-      } as ImageProps;
-
-      setImages([...images, imageFile]);
+      setImagesUri([...imagesUri, imageSelected.assets[0].uri]);
     }
   }
 
   function removeImage(uri: string) {
-    const imagesFiltered = images.filter((image) => image.uri !== uri);
-    setImages(imagesFiltered);
-  }
-
-  function initValues() {
-    setTitle("");
-    setDescription("");
-    setPrice("");
-    setPayMethods([]);
-    setImages([]);
+    const imagesFiltered = imagesUri.filter((imageUri) => imageUri !== uri);
+    setImagesUri(imagesFiltered);
   }
 
   function handleAdvance() {
     const adPreview: AdPreviewDTO = {
-      title,
+      name,
       description,
-      price,
-      images,
-      isNew,
-      acceptTrade,
-      payMethods,
+      price: Number(price),
+      imagesUri,
+      is_new: isNew,
+      accept_trade: acceptTrade,
+      payment_methods: payMethods,
     };
 
     if (
-      title.length === 0 ||
+      name.length === 0 ||
       description.length === 0 ||
       price.length === 0 ||
-      images.length === 0 ||
+      imagesUri.length === 0 ||
       payMethods.length === 0
     ) {
       return toast.show({
@@ -122,16 +87,8 @@ export function CreateAd() {
         bgColor: "red.500",
       });
     }
-
     navigation.navigate("preview", { adPreview });
-    // initValues();
   }
-
-  useFocusEffect(
-    useCallback(() => {
-      // initValues();
-    }, [])
-  );
 
   return (
     <VStack flex={1}>
@@ -155,22 +112,22 @@ export function CreateAd() {
             </Text>
 
             <HStack>
-              {images.length > 0 &&
-                images.map((image) => (
-                  <Box key={image.uri}>
+              {imagesUri.length > 0 &&
+                imagesUri.map((imageUri) => (
+                  <Box key={imageUri}>
                     <Image
                       w={24}
                       h={24}
                       mr={2}
                       mt={4}
                       borderRadius={8}
-                      source={{ uri: image.uri }}
+                      source={{ uri: imageUri }}
                       alt="imagem do produto"
                       resizeMode="cover"
                     />
 
                     <Pressable
-                      onPress={() => removeImage(image.uri)}
+                      onPress={() => removeImage(imageUri)}
                       position="absolute"
                       mt={5}
                       ml={1}
@@ -185,7 +142,9 @@ export function CreateAd() {
                     </Pressable>
                   </Box>
                 ))}
-              {images.length < 3 && <ImageMold onPress={handleSelectImage} />}
+              {imagesUri.length < 3 && (
+                <ImageMold onPress={handleSelectImage} />
+              )}
             </HStack>
           </VStack>
 
@@ -197,8 +156,9 @@ export function CreateAd() {
             <Input
               placeholder="Título do anúncio"
               rounded={6}
-              onChangeText={(value) => setTitle(value)}
-              value={title}
+              onChangeText={(value) => setName(value)}
+              value={name}
+              isRequired
             />
 
             <TextArea
@@ -206,6 +166,7 @@ export function CreateAd() {
               mb={4}
               onChangeText={(value) => setDescription(value)}
               value={description}
+              isRequired
             />
 
             <Radio.Group
@@ -250,6 +211,7 @@ export function CreateAd() {
                 rounded={6}
                 onChangeText={(value) => setPrice(value)}
                 value={price}
+                isRequired
               />
 
               <Text
@@ -287,10 +249,7 @@ export function CreateAd() {
             </Heading>
 
             <VStack>
-              <Checkbox.Group
-                onChange={(method) => setPayMethods(method)}
-                value={payMethods}
-              >
+              <Checkbox.Group onChange={setPayMethods} value={payMethods}>
                 <Checkbox value="boleto" my={1} colorScheme="gray">
                   <Text>Boleto</Text>
                 </Checkbox>
