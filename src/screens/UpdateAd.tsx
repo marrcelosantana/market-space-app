@@ -330,7 +330,7 @@ export function UpdateAd() {
       >
         <ButtonMD title="Cancelar" onPress={() => navigation.goBack()} />
         <ButtonMD
-          title="Avançar"
+          title="Atualizar"
           bgColor="gray.700"
           textColor="white"
           onPress={handleUpdateAd}
