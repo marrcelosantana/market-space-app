@@ -27,6 +27,7 @@ import { ButtonMD } from "@components/ButtonMD";
 import * as ImagePicker from "expo-image-picker";
 
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
+import { ImageFormPreview } from "@components/ImageFormPreview";
 
 export function CreateAd() {
   const [name, setName] = useState("");
@@ -115,16 +116,7 @@ export function CreateAd() {
               {imagesUri.length > 0 &&
                 imagesUri.map((imageUri) => (
                   <Box key={imageUri}>
-                    <Image
-                      w={24}
-                      h={24}
-                      mr={2}
-                      mt={4}
-                      borderRadius={8}
-                      source={{ uri: imageUri }}
-                      alt="imagem do produto"
-                      resizeMode="cover"
-                    />
+                    <ImageFormPreview uri={imageUri} />
 
                     <Pressable
                       onPress={() => removeImage(imageUri)}

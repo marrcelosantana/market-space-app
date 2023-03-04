@@ -33,17 +33,17 @@ type RouteParams = {
 };
 
 export function AdPreview() {
+  const route = useRoute();
+  const { adPreview } = route.params as RouteParams;
+
   const { user } = useAuth();
   const { createAd } = useProducts();
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const route = useRoute();
-  const { adPreview } = route.params as RouteParams;
-
   const toast = useToast();
-  const navigation = useNavigation<AppNavigatorRoutesProps>();
-  const navigation2 = useNavigation<TabNavigatorRoutesProps>();
+  const appNavigation = useNavigation<AppNavigatorRoutesProps>();
+  const tabNavigation = useNavigation<TabNavigatorRoutesProps>();
 
   const width = Dimensions.get("window").width;
 
@@ -59,7 +59,7 @@ export function AdPreview() {
         bgColor: "green.500",
       });
 
-      navigation2.navigate("myAds");
+      tabNavigation.navigate("myAds");
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -181,7 +181,7 @@ export function AdPreview() {
         <ButtonMD
           title="Voltar e editar"
           iconName="arrowleft"
-          onPress={() => navigation.goBack()}
+          onPress={() => appNavigation.goBack()}
         />
         <ButtonMD
           title="Publicar"

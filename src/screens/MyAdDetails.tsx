@@ -185,7 +185,7 @@ export function MyAdDetails() {
           <Carousel
             loop
             width={width}
-            height={320}
+            height={300}
             autoPlay={product.product_images.length > 1}
             data={product.product_images}
             scrollAnimationDuration={3000}
@@ -246,7 +246,7 @@ export function MyAdDetails() {
                 {product.description}
               </Text>
 
-              <HStack alignItems="center" mt={6}>
+              <HStack alignItems="center" mt={4}>
                 <Text fontFamily="heading" mr={2}>
                   Aceita troca?
                 </Text>
@@ -258,7 +258,7 @@ export function MyAdDetails() {
                   Método de pagamento
                 </Text>
 
-                {product.payment_methods?.map((item) => (
+                {product.payment_methods.map((item) => (
                   <PayMethod type={item.key} key={item.key} />
                 ))}
               </VStack>

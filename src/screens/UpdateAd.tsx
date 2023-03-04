@@ -25,7 +25,6 @@ import { TextArea } from "@components/TextArea";
 import { ButtonMD } from "@components/ButtonMD";
 
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
 
 import { ProductDTO } from "@models/ProductDTO";
 import { ProductImageDTO } from "@models/ProductImageDTO";
@@ -34,19 +33,19 @@ import { api } from "@services/api";
 import { useProducts } from "@hooks/useProducts";
 import { AdPreviewDTO } from "@models/AdPreviewDTO";
 import { AppError } from "@utils/AppError";
+import { ImageFormPreview } from "@components/ImageFormPreview";
 
 type RouteParams = {
   product: ProductDTO;
 };
 
 export function UpdateAd() {
-  const { updateAd } = useProducts();
-
   const route = useRoute();
   const { product } = route.params as RouteParams;
 
+  const { updateAd } = useProducts();
+
   const payMethodsKey = product.payment_methods.map(({ key }) => key);
-  const imagesPath = product.product_images.map(({ path }) => path);
 
   const [title, setTitle] = useState(product.name);
   const [description, setDescription] = useState(product.description);
@@ -79,16 +78,14 @@ export function UpdateAd() {
     }
 
     if (ImageSelected.assets[0].uri) {
-      setNewImages((prevValues) => [
-        ...prevValues,
-        ImageSelected.assets[0].uri,
-      ]);
+      setNewImages([...newImages, ImageSelected.assets[0].uri]);
     }
   }
 
-  function removeImage(path: string) {
-    const imagesFiltered = images.filter((image) => image.path !== path);
-    setImages(imagesFiltered);
+  function removeImage(item: string) {
+    setDeletedImages([...deletedImages, item]);
+    setImages(images.filter((image) => image.id !== item));
+    setNewImages(newImages.filter((image) => image !== item));
   }
 
   async function handleUpdateAd() {
@@ -101,6 +98,7 @@ export function UpdateAd() {
       payment_methods: payMethods,
       imagesUri: newImages,
     };
+
     try {
       setIsLoading(true);
       await updateAd(newAd, product.id, deletedImages, images);
@@ -150,39 +148,53 @@ export function UpdateAd() {
             </Text>
 
             <HStack>
-              {images.length > 0 &&
-                images.map((image) => (
-                  <Box key={image.id}>
-                    <Image
-                      w={24}
-                      h={24}
-                      mr={2}
-                      mt={4}
-                      borderRadius={8}
-                      source={{
-                        uri: `${api.defaults.baseURL}/images/${image.path}`,
-                      }}
-                      alt="imagem do produto"
-                      resizeMode="cover"
-                    />
+              {images.map((image) => (
+                <Box key={image.id}>
+                  <ImageFormPreview
+                    uri={`${api.defaults.baseURL}/images/${image.path}`}
+                  />
 
-                    <Pressable
-                      onPress={() => removeImage(image.path)}
-                      position="absolute"
-                      mt={5}
-                      ml={1}
-                      w={5}
-                      h={5}
-                      rounded="full"
-                      bgColor="gray.600"
-                      alignItems="center"
-                      justifyContent="center"
-                    >
-                      <CloseIcon size={2} color="white" />
-                    </Pressable>
-                  </Box>
-                ))}
-              {images.length < 3 && <ImageMold onPress={handleSelectImage} />}
+                  <Pressable
+                    onPress={() => removeImage(image.id)}
+                    position="absolute"
+                    mt={5}
+                    ml={1}
+                    w={5}
+                    h={5}
+                    rounded="full"
+                    bgColor="gray.600"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <CloseIcon size={2} color="white" />
+                  </Pressable>
+                </Box>
+              ))}
+
+              {newImages.map((image) => (
+                <Box key={image}>
+                  <ImageFormPreview uri={image} />
+
+                  <Pressable
+                    onPress={() => removeImage(image)}
+                    position="absolute"
+                    mt={5}
+                    ml={1}
+                    w={5}
+                    h={5}
+                    rounded="full"
+                    bgColor="gray.600"
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <CloseIcon size={2} color="white" />
+                  </Pressable>
+                </Box>
+              ))}
+
+              {images.length + newImages.length < 3 && (
+                <ImageMold onPress={handleSelectImage} />
+              )}
             </HStack>
           </VStack>
 
