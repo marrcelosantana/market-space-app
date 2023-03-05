@@ -49,7 +49,10 @@ type FormData = {
 };
 
 const signUpSchema = yup.object({
-  name: yup.string().required("Informe o nome."),
+  name: yup
+    .string()
+    .required("Informe o nome.")
+    .max(15, "Limite máximo de 15 caracteres."),
   tel: yup
     .string()
     .required("Informe o telefone")
@@ -261,13 +264,13 @@ export function SignUp() {
                     <Pressable onPress={() => setShowPassword(!showPassword)}>
                       {showPassword ? (
                         <Eye
-                          size={24}
+                          size={22}
                           color={colors.gray[400]}
                           style={{ marginRight: 10 }}
                         />
                       ) : (
                         <EyeSlash
-                          size={24}
+                          size={22}
                           color={colors.gray[400]}
                           style={{ marginRight: 10 }}
                         />
@@ -300,13 +303,13 @@ export function SignUp() {
                     >
                       {showConfirmPassword ? (
                         <Eye
-                          size={24}
+                          size={22}
                           color={colors.gray[400]}
                           style={{ marginRight: 10 }}
                         />
                       ) : (
                         <EyeSlash
-                          size={24}
+                          size={22}
                           color={colors.gray[400]}
                           style={{ marginRight: 10 }}
                         />

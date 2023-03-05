@@ -42,7 +42,7 @@ export function UserPhoto({ userPhoto, choosePhoto }: Props) {
           mt={12}
           onPress={choosePhoto}
         >
-          <PencilSimpleLine size={22} color="#fff" />
+          <PencilSimpleLine size={20} color="#fff" />
         </Pressable>
       </HStack>
     </Center>

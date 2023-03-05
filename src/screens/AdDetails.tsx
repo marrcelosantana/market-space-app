@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Linking } from "react-native";
 
 import {
   useFocusEffect,
@@ -56,6 +56,26 @@ export function AdDetails() {
       setIsloading(true);
       const response = await api.get(`/products/${productId}`);
       setProduct(response.data);
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível carregar os dados.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsloading(false);
+    }
+  }
+
+  function handleSendMessage() {
+    try {
+      setIsloading(true);
+      Linking.openURL(`https://wa.me/${product.user.tel}`);
     } catch (error) {
       const isAppError = error instanceof AppError;
       const title = isAppError
@@ -202,7 +222,11 @@ export function AdDetails() {
               {priceFormatter.format(product.price)}
             </Heading>
 
-            <Pressable bgColor="blue.500" rounded={6}>
+            <Pressable
+              bgColor="blue.500"
+              rounded={6}
+              onPress={handleSendMessage}
+            >
               <HStack alignItems="center" justifyContent="center" p={3}>
                 <WhatsappLogo size={16} color={colors.gray[100]} />
                 <Text

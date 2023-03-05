@@ -11,7 +11,12 @@ export function HomeHeader() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
 
   return (
-    <HStack w="full" alignItems="center" justifyContent="space-between">
+    <HStack
+      w="full"
+      alignItems="center"
+      justifyContent="space-between"
+      maxW="full"
+    >
       <HStack>
         <Center
           w={12}
@@ -35,7 +40,12 @@ export function HomeHeader() {
 
         <VStack ml={2}>
           <Text fontSize="md">Boas vindas,</Text>
-          <Heading fontFamily="heading" fontSize="md" numberOfLines={1}>
+          <Heading
+            fontFamily="heading"
+            fontSize="md"
+            numberOfLines={1}
+            overflow="hidden"
+          >
             {user.name}!
           </Heading>
         </VStack>

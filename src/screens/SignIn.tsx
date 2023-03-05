@@ -141,7 +141,7 @@ export function SignIn() {
                     <Pressable onPress={() => setShowPassword(!showPassword)}>
                       {showPassword ? (
                         <Eye
-                          size={24}
+                          size={22}
                           color={colors.gray[400]}
                           style={{ marginRight: 10 }}
                         />

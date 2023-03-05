@@ -186,7 +186,7 @@ export function AdPreview() {
         />
         <ButtonMD
           title="Publicar"
-          bgColor="blue.500"
+          bgColor="#32b447"
           textColor="white"
           iconName="tag"
           iconColor="white"

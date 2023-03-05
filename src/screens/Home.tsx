@@ -70,25 +70,6 @@ export function Home() {
     }
   }
 
-  async function handleRefresh() {
-    try {
-      await loadProducts();
-      setSearch("");
-      Keyboard.dismiss();
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError
-        ? error.message
-        : "Não foi possível carregar os dados.";
-
-      toast.show({
-        title,
-        placement: "top",
-        bgColor: "red.500",
-      });
-    }
-  }
-
   async function applyFilters() {
     try {
       setModalVisible(false);
@@ -163,18 +144,7 @@ export function Home() {
           px={0}
           value={search}
           placeholder="Buscar um anúncio"
-          leftElement={
-            <Pressable
-              alignItems="center"
-              justifyContent="center"
-              bgColor="gray.100"
-              h={45}
-              px={2}
-              onPress={handleRefresh}
-            >
-              <ArrowClockwise size={20} color={colors.gray[600]} />
-            </Pressable>
-          }
+          pl={3}
           rightElement={
             <HStack>
               <Pressable
@@ -184,7 +154,6 @@ export function Home() {
                 h={45}
                 px={2}
                 onPress={() => handleSearch(search)}
-                disabled={search.length === 0}
               >
                 <MagnifyingGlass size={20} color={colors.gray[600]} />
               </Pressable>
