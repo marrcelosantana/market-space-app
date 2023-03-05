@@ -55,3 +55,9 @@ $ npm install
 $ npm run dev
 
 ```
+
+### Aplicação em funcionamento
+
+|             Parte I              |             Parte II             |
+| :------------------------------: | :------------------------------: |
+| <img src= "./assets/part-1.gif"> | <img src= "./assets/part-2.gif"> |
