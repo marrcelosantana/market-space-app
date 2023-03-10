@@ -22,12 +22,7 @@ import { FilterModal } from "@components/FilterModal";
 import { Loading } from "@components/Loading";
 import { Input } from "@components/Input";
 
-import {
-  ArrowClockwise,
-  MagnifyingGlass,
-  Sliders,
-  SmileyXEyes,
-} from "phosphor-react-native";
+import { MagnifyingGlass, Sliders, SmileyXEyes } from "phosphor-react-native";
 
 import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { AppError } from "@utils/AppError";
